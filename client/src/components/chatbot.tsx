@@ -16,20 +16,22 @@ interface Message {
 const botResponses: Record<string, string> = {
   "hello": "Hi there! I'm James's assistant. How can I help you today?",
   "hi": "Hello! I'm here to answer any questions about James Castillo. What would you like to know?",
-  "location": "James is based in San Francisco, CA and is open to both local and remote opportunities.",
-  "where": "James is located in San Francisco, CA. He's available for work worldwide through remote collaboration.",
+  "location": "James is based in Batangas City, Philippines and is open to both local and remote opportunities worldwide.",
+  "where": "James is located in Batangas City, Philippines. He's available for work worldwide through remote collaboration.",
   "availability": "James is currently available for new opportunities! He's open to discussing projects and job opportunities.",
   "available": "Yes, James is available for new projects and job opportunities. Feel free to reach out through the contact form!",
-  "time": "James is available during Pacific Time business hours (9 AM - 6 PM PST) but can accommodate different time zones for international clients.",
-  "hours": "James typically works during Pacific Time business hours but is flexible with scheduling for client needs.",
+  "time": "James is available during Philippine Time business hours (9 AM - 6 PM PHT) but can accommodate different time zones for international clients.",
+  "hours": "James typically works during Philippine Time business hours but is flexible with scheduling for client needs across different time zones.",
   "skills": "James specializes in full-stack development with expertise in React, Node.js, TypeScript, and modern web technologies.",
   "experience": "James has 5+ years of experience in full-stack development, creating modern web applications and user-centered designs.",
   "projects": "You can view James's latest projects in the Projects section. He's worked on e-commerce platforms, task management apps, and analytics dashboards.",
   "contact": "You can reach James through the contact form on this website, or connect with him on LinkedIn, Facebook, or Instagram.",
-  "email": "You can email James at james.castillo@email.com or use the contact form on this website.",
-  "phone": "James can be reached at +1 (555) 123-4567 for urgent inquiries.",
+  "email": "You can email James at jamesmatthewcastillo4@gmail.com or use the contact form on this website.",
+  "phone": "James can be reached at +63 960 381 8382 for urgent inquiries.",
   "resume": "You can download James's resume from the About section of this website.",
   "technologies": "James works with React, Vue.js, Angular, Node.js, Python, PostgreSQL, MongoDB, AWS, Docker, and many other modern technologies.",
+  "philippines": "Yes, James is based in Batangas City, Philippines. He's available for both local Philippine projects and international remote work.",
+  "timezone": "James works in Philippine Time (PHT/GMT+8). He's flexible with scheduling and can accommodate meetings with international clients.",
   "default": "I'm here to help! You can ask me about James's location, availability, skills, experience, or how to contact him. What would you like to know?"
 };
 
@@ -58,6 +60,7 @@ export function Chatbot() {
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
@@ -70,6 +73,25 @@ export function Chatbot() {
   useEffect(() => {
     scrollToBottom();
   }, [messages, isTyping]);
+
+  // Close chatbot when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (chatContainerRef.current && !chatContainerRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
 
   const sendMessage = async () => {
     if (!inputValue.trim()) return;
@@ -127,10 +149,16 @@ export function Chatbot() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 100, scale: 0.8 }}
+            ref={chatContainerRef}
+            initial={{ opacity: 0, y: 50, scale: 0.9, originY: 1, originX: 1 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 100, scale: 0.8 }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            exit={{ opacity: 0, y: 50, scale: 0.9 }}
+            transition={{ 
+              type: "spring", 
+              damping: 20, 
+              stiffness: 300,
+              opacity: { duration: 0.2 }
+            }}
             className="fixed bottom-24 right-6 z-40 w-80 h-96"
           >
             <Card className="h-full flex flex-col shadow-2xl">

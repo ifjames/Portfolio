@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Badge } from "@/components/ui/badge";
 import { useTheme } from "./theme-provider";
-import { Sun, Moon, Menu } from "lucide-react";
+import { Sun, Moon, Menu, Bell } from "lucide-react";
 import { motion } from "framer-motion";
 
 const navItems = [
@@ -38,7 +39,7 @@ export function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="text-xl font-bold text-primary">
-            AJ<span className="text-foreground">.</span>
+            JMC<span className="text-foreground">.</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -56,7 +57,21 @@ export function Navigation() {
             ))}
           </div>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="relative bg-background/50 hover:bg-background/80"
+            >
+              <Bell className="h-4 w-4" />
+              <Badge
+                variant="destructive"
+                className="absolute -top-1 -right-1 h-4 w-4 text-xs p-0 flex items-center justify-center"
+              >
+                2
+              </Badge>
+            </Button>
+            
             <Button
               variant="ghost"
               size="icon"

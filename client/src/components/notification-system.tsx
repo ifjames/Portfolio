@@ -130,30 +130,7 @@ export function NotificationSystem() {
         )}
       </AnimatePresence>
 
-      {/* Notification Bell */}
-      <motion.div
-        className="fixed top-20 right-6 z-40"
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ delay: 1 }}
-      >
-        <Button
-          variant="outline"
-          size="icon"
-          className="relative bg-background/80 backdrop-blur-sm"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          <Bell className="h-4 w-4" />
-          {unreadCount > 0 && (
-            <Badge
-              variant="destructive"
-              className="absolute -top-2 -right-2 h-5 w-5 text-xs p-0 flex items-center justify-center"
-            >
-              {unreadCount}
-            </Badge>
-          )}
-        </Button>
-      </motion.div>
+
 
       {/* Notifications Panel */}
       <AnimatePresence>

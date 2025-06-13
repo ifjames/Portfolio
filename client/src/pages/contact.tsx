@@ -26,19 +26,19 @@ const contactInfo = [
   {
     icon: Mail,
     label: "Email",
-    value: "james.castillo@email.com",
+    value: "jamesmatthewcastillo4@gmail.com",
     color: "bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400",
   },
   {
     icon: Phone,
     label: "Phone",
-    value: "+1 (555) 123-4567",
+    value: "+63 960 381 8382",
     color: "bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400",
   },
   {
     icon: MapPin,
     label: "Location",
-    value: "San Francisco, CA",
+    value: "Batangas City, Philippines",
     color: "bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-400",
   },
 ];
