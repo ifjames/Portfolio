@@ -6,7 +6,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Navigation } from "@/components/navigation";
 import { Chatbot } from "@/components/chatbot";
-import { NotificationSystem } from "@/components/notification-system";
 import Home from "@/pages/home";
 import Projects from "@/pages/projects";
 import About from "@/pages/about";
@@ -30,13 +29,14 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="light">
         <TooltipProvider>
-          <div className="min-h-screen bg-background">
-            <Navigation />
-            <NotificationSystem />
-            <main className="pt-16">
-              <Router />
-            </main>
-            <Chatbot />
+          <div className="min-h-screen">
+            <div className="content-overlay min-h-screen">
+              <Navigation />
+              <main className="pt-16">
+                <Router />
+              </main>
+              <Chatbot />
+            </div>
           </div>
           <Toaster />
         </TooltipProvider>
