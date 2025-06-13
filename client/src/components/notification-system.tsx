@@ -143,7 +143,7 @@ export function NotificationSystem({ isOpen, setIsOpen }: NotificationSystemProp
             initial={{ opacity: 0, y: -20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.95 }}
-            className="fixed top-32 right-6 w-80 z-30"
+            className="fixed top-20 right-6 w-80 z-30"
           >
             <Card className="shadow-xl">
               <CardContent className="p-0">

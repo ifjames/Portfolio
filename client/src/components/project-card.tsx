@@ -20,7 +20,7 @@ import {
   SiNextdotjs,
   SiExpress,
   SiDjango,
-  SiAmazon,
+
   SiStripe,
   SiFramer
 } from "react-icons/si";
@@ -51,8 +51,8 @@ const getTechIcon = (tech: string) => {
     'Next.js': SiNextdotjs,
     'Express.js': SiExpress,
     'Django': SiDjango,
-    'AWS': SiAmazon,
-    'AWS S3': SiAmazon,
+    'AWS': SiJavascript,
+    'AWS S3': SiJavascript,
     'Stripe': SiStripe,
     'Framer Motion': SiFramer,
     'D3.js': SiJavascript,
