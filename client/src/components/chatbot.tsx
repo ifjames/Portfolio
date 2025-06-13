@@ -135,6 +135,7 @@ export function Chatbot() {
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         transition={{ delay: 2 }}
+        style={{ position: 'fixed' }}
       >
         <Button
           onClick={() => setIsOpen(!isOpen)}
