@@ -59,13 +59,17 @@ export function Chatbot() {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+    }
   };
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, isTyping]);
 
   const sendMessage = async () => {
     if (!inputValue.trim()) return;
@@ -130,74 +134,70 @@ export function Chatbot() {
             className="fixed bottom-24 right-6 z-40 w-80 h-96"
           >
             <Card className="h-full flex flex-col shadow-2xl">
-              <CardHeader className="bg-primary text-primary-foreground rounded-t-lg">
+              <CardHeader className="bg-primary text-primary-foreground rounded-t-lg flex-shrink-0">
                 <CardTitle className="flex items-center gap-2 text-sm">
                   <Bot className="h-5 w-5" />
                   James's Assistant
                 </CardTitle>
               </CardHeader>
               
-              <CardContent className="flex-1 p-0 flex flex-col">
-                <div className="flex-1 overflow-hidden">
-                  <ScrollArea className="h-full">
-                    <div className="p-4 space-y-4">
-                      {messages.map((message) => (
-                        <motion.div
-                          key={message.id}
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          className={`flex ${message.isBot ? "justify-start" : "justify-end"}`}
+              <CardContent className="flex-1 p-0 flex flex-col min-h-0">
+                <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-4 space-y-4">
+                  {messages.map((message) => (
+                    <motion.div
+                      key={message.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className={`flex ${message.isBot ? "justify-start" : "justify-end"}`}
+                    >
+                      <div
+                        className={`flex items-start gap-2 max-w-[80%] ${
+                          message.isBot ? "flex-row" : "flex-row-reverse"
+                        }`}
+                      >
+                        <div
+                          className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                            message.isBot
+                              ? "bg-primary text-primary-foreground"
+                              : "bg-muted text-muted-foreground"
+                          }`}
                         >
-                          <div
-                            className={`flex items-start gap-2 max-w-[80%] ${
-                              message.isBot ? "flex-row" : "flex-row-reverse"
-                            }`}
-                          >
-                            <div
-                              className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                                message.isBot
-                                  ? "bg-primary text-primary-foreground"
-                                  : "bg-muted text-muted-foreground"
-                              }`}
-                            >
-                              {message.isBot ? <Bot className="h-4 w-4" /> : <User className="h-4 w-4" />}
-                            </div>
-                            <div
-                              className={`rounded-lg p-3 text-sm break-words ${
-                                message.isBot
-                                  ? "bg-muted text-muted-foreground"
-                                  : "bg-primary text-primary-foreground"
-                              }`}
-                            >
-                              {message.text}
-                            </div>
-                          </div>
-                        </motion.div>
-                      ))}
-                      
-                      {isTyping && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          className="flex justify-start"
+                          {message.isBot ? <Bot className="h-4 w-4" /> : <User className="h-4 w-4" />}
+                        </div>
+                        <div
+                          className={`rounded-lg p-3 text-sm break-words ${
+                            message.isBot
+                              ? "bg-muted text-muted-foreground"
+                              : "bg-primary text-primary-foreground"
+                          }`}
                         >
-                          <div className="flex items-start gap-2">
-                            <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center flex-shrink-0">
-                              <Bot className="h-4 w-4" />
-                            </div>
-                            <div className="bg-muted rounded-lg p-3">
-                              <div className="flex space-x-1">
-                                <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce"></div>
-                                <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
-                                <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
-                              </div>
-                            </div>
+                          {message.text}
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                  
+                  {isTyping && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="flex justify-start"
+                    >
+                      <div className="flex items-start gap-2">
+                        <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center flex-shrink-0">
+                          <Bot className="h-4 w-4" />
+                        </div>
+                        <div className="bg-muted rounded-lg p-3">
+                          <div className="flex space-x-1">
+                            <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce"></div>
+                            <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
+                            <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
                           </div>
-                        </motion.div>
-                      )}
-                      <div ref={messagesEndRef} />
-                    </div>
-                  </ScrollArea>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                  <div ref={messagesEndRef} />
                 </div>
                 
                 <div className="p-4 border-t">
