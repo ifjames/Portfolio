@@ -1,7 +1,8 @@
-import { motion } from "framer-motion";
-import { ExternalLink, Github } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ExternalLink, Github, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
 import { 
   SiReact, 
   SiNodedotjs, 
@@ -24,7 +25,8 @@ import {
   SiStripe,
   SiFramer
 } from "react-icons/si";
-import type { Project } from "@shared/schema";
+import type { Project } from "@/data/projects";
+import { EVERYTHING_LOCKED } from "@/data/projects";
 
 interface ProjectCardProps {
   project: Project;
@@ -65,6 +67,28 @@ const getTechIcon = (tech: string) => {
 };
 
 export function ProjectCard({ project, index }: ProjectCardProps) {
+  const [showCodeLocked, setShowCodeLocked] = useState(false);
+  const [showLiveLocked, setShowLiveLocked] = useState(false);
+
+  // Determine if project should be in locked/development mode
+  const isEverythingLocked = EVERYTHING_LOCKED;
+  const isInDevelopmentMode = project.developmentMode || isEverythingLocked; // Show badge mode if in development OR everything is locked
+  const isCodeLocked = isEverythingLocked || project.codeLocked;
+  const isLiveUrlLocked = isEverythingLocked || project.liveUrlLocked;
+
+  const handleCodeClick = () => {
+    if (isCodeLocked && !isInDevelopmentMode) {
+      setShowCodeLocked(true);
+      setTimeout(() => setShowCodeLocked(false), 2000); // Revert after 2 seconds
+    }
+  };
+
+  const handleLiveClick = () => {
+    if (isLiveUrlLocked && !isInDevelopmentMode) {
+      setShowLiveLocked(true);
+      setTimeout(() => setShowLiveLocked(false), 2000); // Revert after 2 seconds
+    }
+  };
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
@@ -105,34 +129,139 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
         <div className="flip-card-back absolute inset-0 bg-gradient-to-br from-primary to-primary/80 rounded-xl shadow-lg p-6 flex flex-col justify-center items-center text-primary-foreground">
           <h3 className="text-xl font-bold mb-4">{project.title}</h3>
           <p className="text-center mb-6">{project.description}</p>
-          <div className="flex space-x-4">
-            {project.liveUrl && (
-              <Button
-                asChild
-                variant="secondary"
-                size="sm"
-                className="bg-white text-primary hover:bg-gray-100"
+          {/* Development Mode - Show status badge instead of buttons */}
+          {isInDevelopmentMode ? (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4 }}
+              className="flex justify-center"
+            >
+              <Badge 
+                variant="secondary" 
+                className="bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 text-sm px-4 py-2 border border-slate-200 dark:border-slate-700"
               >
-                <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
-                  <ExternalLink className="w-4 h-4 mr-2" />
-                  Live Demo
-                </a>
-              </Button>
-            )}
-            {project.githubUrl && (
-              <Button
-                asChild
-                variant="outline"
-                size="sm"
-                className="border-white text-white hover:bg-white hover:text-primary"
-              >
-                <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
-                  <Github className="w-4 h-4 mr-2" />
-                  Code
-                </a>
-              </Button>
-            )}
-          </div>
+                <Lock className="w-4 h-4 mr-2" />
+                {isEverythingLocked ? "Locked" : (project.developmentMessage || "In Development")}
+              </Badge>
+            </motion.div>
+          ) : (
+            /* Normal Mode - Show buttons */
+            <div className="flex space-x-4">
+              {(project.liveUrl || isLiveUrlLocked) && (
+                <motion.div
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: [1, 1.3, 0.9, 1.2, 1], rotate: [0, 3, -3, 2, 0] }}
+                  animate={{ rotate: 0 }}
+                >
+                  {isLiveUrlLocked ? (
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      className="bg-background text-foreground hover:bg-accent hover:text-accent-foreground border-2 border-background overflow-hidden"
+                      onClick={handleLiveClick}
+                    >
+                      <AnimatePresence mode="wait">
+                        {showLiveLocked ? (
+                          <motion.div
+                            key="locked"
+                            initial={{ opacity: 0, x: 20, scale: 0.8 }}
+                            animate={{ opacity: 1, x: 0, scale: 1 }}
+                            exit={{ opacity: 0, x: -20, scale: 0.8 }}
+                            transition={{ duration: 0.3, ease: "easeInOut" }}
+                            className="flex items-center"
+                          >
+                            <Lock className="w-4 h-4 mr-2" />
+                            {isEverythingLocked ? "Everything Locked" : (project.liveUrlLockedMessage || "Locked")}
+                          </motion.div>
+                        ) : (
+                          <motion.div
+                            key="normal"
+                            initial={{ opacity: 0, x: 20, scale: 0.8 }}
+                            animate={{ opacity: 1, x: 0, scale: 1 }}
+                            exit={{ opacity: 0, x: -20, scale: 0.8 }}
+                            transition={{ duration: 0.3, ease: "easeInOut" }}
+                            className="flex items-center"
+                          >
+                            <ExternalLink className="w-4 h-4 mr-2" />
+                            Live Demo
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </Button>
+                  ) : (
+                    <Button
+                      asChild
+                      variant="secondary"
+                      size="sm"
+                      className="bg-background text-foreground hover:bg-accent hover:text-accent-foreground border-2 border-background"
+                    >
+                      <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+                        <ExternalLink className="w-4 h-4 mr-2" />
+                        Live Demo
+                      </a>
+                    </Button>
+                  )}
+                </motion.div>
+              )}
+              {(project.githubUrl || isCodeLocked) && (
+                <motion.div
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: [1, 1.3, 0.9, 1.2, 1], rotate: [0, -3, 3, -2, 0] }}
+                  animate={{ rotate: 0 }}
+                >
+                  {isCodeLocked ? (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="border-2 border-background bg-transparent text-background hover:bg-background hover:text-foreground overflow-hidden"
+                      onClick={handleCodeClick}
+                    >
+                      <AnimatePresence mode="wait">
+                        {showCodeLocked ? (
+                          <motion.div
+                            key="locked"
+                            initial={{ opacity: 0, x: 20, scale: 0.8 }}
+                            animate={{ opacity: 1, x: 0, scale: 1 }}
+                            exit={{ opacity: 0, x: -20, scale: 0.8 }}
+                            transition={{ duration: 0.3, ease: "easeInOut" }}
+                            className="flex items-center"
+                          >
+                            <Lock className="w-4 h-4 mr-2" />
+                            {isEverythingLocked ? "Everything Locked" : (project.codeLockedMessage || "Locked")}
+                          </motion.div>
+                        ) : (
+                          <motion.div
+                            key="normal"
+                            initial={{ opacity: 0, x: 20, scale: 0.8 }}
+                            animate={{ opacity: 1, x: 0, scale: 1 }}
+                            exit={{ opacity: 0, x: -20, scale: 0.8 }}
+                            transition={{ duration: 0.3, ease: "easeInOut" }}
+                            className="flex items-center"
+                          >
+                            <Github className="w-4 h-4 mr-2" />
+                            Code
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </Button>
+                  ) : (
+                    <Button
+                      asChild
+                      variant="outline"
+                      size="sm"
+                      className="border-2 border-background bg-transparent text-background hover:bg-background hover:text-foreground"
+                    >
+                      <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
+                        <Github className="w-4 h-4 mr-2" />
+                        Code
+                      </a>
+                    </Button>
+                  )}
+                </motion.div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </motion.div>

@@ -87,29 +87,30 @@ export default function Contact() {
   };
 
   return (
-    <section className="py-20 bg-muted/30">
+    <section className="py-12 sm:py-16 lg:py-20 bg-muted/30">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="text-center mb-8 lg:mb-12"
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">Get In Touch</h2>
-          <p className="text-xl text-muted-foreground">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">Get In Touch</h2>
+          <p className="text-base sm:text-xl text-muted-foreground">
             Let's discuss how we can work together on your next project
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           {/* Contact Info */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
+            className="order-2 lg:order-1"
           >
-            <h3 className="text-2xl font-semibold mb-6">Let's Connect</h3>
-            <div className="space-y-6 mb-8">
+            <h3 className="text-xl sm:text-2xl font-semibold mb-4 lg:mb-6">Let's Connect</h3>
+            <div className="space-y-4 lg:space-y-6 mb-6 lg:mb-8">
               {contactInfo.map((item, index) => (
                 <motion.div
                   key={item.label}
@@ -119,11 +120,11 @@ export default function Contact() {
                   className="flex items-center"
                 >
                   <div className={`p-3 rounded-lg mr-4 ${item.color}`}>
-                    <item.icon className="h-5 w-5" />
+                    <item.icon className="h-4 w-4 sm:h-5 sm:w-5" />
                   </div>
                   <div>
-                    <h4 className="font-medium">{item.label}</h4>
-                    <p className="text-muted-foreground">{item.value}</p>
+                    <h4 className="font-medium text-sm sm:text-base">{item.label}</h4>
+                    <p className="text-muted-foreground text-sm sm:text-base">{item.value}</p>
                   </div>
                 </motion.div>
               ))}
@@ -131,8 +132,8 @@ export default function Contact() {
 
             {/* Social Links */}
             <div>
-              <h4 className="font-medium mb-4">Follow Me</h4>
-              <div className="flex space-x-4">
+              <h4 className="font-medium mb-3 lg:mb-4 text-sm sm:text-base">Follow Me</h4>
+              <div className="flex space-x-3 lg:space-x-4">
                 {socialLinks.map((social, index) => (
                   <motion.a
                     key={index}
@@ -140,9 +141,9 @@ export default function Contact() {
                     initial={{ opacity: 0, scale: 0 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
-                    className={`bg-muted hover:text-white p-3 rounded-lg transition-colors duration-200 ${social.color}`}
+                    className={`bg-muted hover:text-white p-2 sm:p-3 rounded-lg transition-colors duration-200 ${social.color}`}
                   >
-                    <social.icon className="h-5 w-5" />
+                    <social.icon className="h-4 w-4 sm:h-5 sm:w-5" />
                   </motion.a>
                 ))}
               </div>
@@ -154,9 +155,10 @@ export default function Contact() {
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
+            className="order-1 lg:order-2"
           >
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 lg:space-y-6">
                 <FormField
                   control={form.control}
                   name="name"
@@ -217,20 +219,26 @@ export default function Contact() {
                   )}
                 />
 
-                <Button
-                  type="submit"
-                  className="w-full"
-                  disabled={contactMutation.isPending}
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: [1, 1.2, 0.95, 1.1, 1], rotate: [0, 2, -2, 1, 0] }}
+                  animate={{ rotate: 0 }}
                 >
-                  {contactMutation.isPending ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Sending...
-                    </>
-                  ) : (
-                    "Send Message"
-                  )}
-                </Button>
+                  <Button
+                    type="submit"
+                    className="w-full"
+                    disabled={contactMutation.isPending}
+                  >
+                    {contactMutation.isPending ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Sending...
+                      </>
+                    ) : (
+                      "Send Message"
+                    )}
+                  </Button>
+                </motion.div>
               </form>
             </Form>
           </motion.div>

@@ -105,7 +105,7 @@ export function NotificationSystem({ isOpen, setIsOpen }: NotificationSystemProp
             initial={{ opacity: 0, y: -100, x: "-50%" }}
             animate={{ opacity: 1, y: 0, x: "-50%" }}
             exit={{ opacity: 0, y: -100, x: "-50%" }}
-            className="fixed top-20 left-1/2 z-50 w-96 max-w-sm"
+            className="fixed top-20 left-1/2 z-50 w-[calc(100vw-2rem)] max-w-sm mx-auto"
           >
             <Card className="shadow-lg border-l-4 border-l-primary">
               <CardContent className="p-4">
@@ -143,7 +143,7 @@ export function NotificationSystem({ isOpen, setIsOpen }: NotificationSystemProp
             initial={{ opacity: 0, y: -20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.95 }}
-            className="fixed top-20 right-6 w-80 z-30"
+            className="fixed sm:absolute top-16 sm:top-12 right-2 sm:right-0 w-[calc(100vw-1rem)] sm:w-80 max-w-sm z-50"
           >
             <Card className="shadow-xl">
               <CardContent className="p-0">

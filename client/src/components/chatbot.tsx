@@ -77,7 +77,14 @@ export function Chatbot() {
   // Close chatbot when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (chatContainerRef.current && !chatContainerRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      
+      // Don't close if clicking on the toggle button or inside the chat
+      if (
+        chatContainerRef.current && 
+        !chatContainerRef.current.contains(target) &&
+        !(target as Element).closest('[data-chatbot-toggle]')
+      ) {
         setIsOpen(false);
       }
     }
@@ -143,9 +150,13 @@ export function Chatbot() {
         }}
       >
         <Button
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsOpen(!isOpen);
+          }}
           className="h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-shadow"
           size="icon"
+          data-chatbot-toggle
         >
           {isOpen ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" />}
         </Button>

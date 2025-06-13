@@ -30,7 +30,6 @@ function App() {
       <ThemeProvider defaultTheme="light">
         <TooltipProvider>
           <div className="min-h-screen">
-            <div className="animated-background"></div>
             <div className="content-overlay min-h-screen">
               <Navigation />
               <main className="pt-16">

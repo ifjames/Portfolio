@@ -34,8 +34,8 @@ export function Navigation() {
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        isScrolled ? "glass-effect border-b border-border" : ""
+      className={`fixed top-0 w-full z-50 transition-all duration-300 navbar-blur ${
+        isScrolled ? "border-b border-border shadow-sm" : ""
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -60,40 +60,58 @@ export function Navigation() {
           </div>
 
           <div className="flex items-center space-x-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="relative bg-background/50 hover:bg-background/80"
-              onClick={() => setShowNotifications(!showNotifications)}
-            >
-              <Bell className="h-4 w-4" />
-              <Badge
-                variant="destructive"
-                className="absolute -top-1 -right-1 h-4 w-4 text-xs p-0 flex items-center justify-center"
+            <div className="relative">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: [1, 1.2, 0.95, 1.1, 1] }}
               >
-                2
-              </Badge>
-            </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="relative bg-background/50 hover:bg-background/80"
+                  onClick={() => setShowNotifications(!showNotifications)}
+                >
+                  <Bell className="h-4 w-4" />
+                  <Badge
+                    variant="destructive"
+                    className="absolute -top-1 -right-1 h-4 w-4 text-xs p-0 flex items-center justify-center"
+                  >
+                    2
+                  </Badge>
+                </Button>
+              </motion.div>
+              <NotificationSystem isOpen={showNotifications} setIsOpen={setShowNotifications} />
+            </div>
             
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleTheme}
-              className="bg-background/50 hover:bg-background/80"
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: [1, 1.2, 0.95, 1.1, 1] }}
             >
-              {theme === "dark" ? (
-                <Sun className="h-4 w-4 text-yellow-500" />
-              ) : (
-                <Moon className="h-4 w-4 text-blue-500" />
-              )}
-            </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={toggleTheme}
+                className="bg-background/50 hover:bg-background/80"
+              >
+                {theme === "dark" ? (
+                  <Sun className="h-4 w-4 text-yellow-500" />
+                ) : (
+                  <Moon className="h-4 w-4 text-blue-500" />
+                )}
+              </Button>
+            </motion.div>
 
             {/* Mobile Navigation */}
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="md:hidden">
-                  <Menu className="h-4 w-4" />
-                </Button>
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: [1, 1.2, 0.95, 1.1, 1] }}
+                >
+                  <Button variant="ghost" size="icon" className="md:hidden">
+                    <Menu className="h-4 w-4" />
+                  </Button>
+                </motion.div>
               </SheetTrigger>
               <SheetContent side="right" className="w-64">
                 <div className="flex flex-col space-y-4 mt-8">
@@ -114,7 +132,6 @@ export function Navigation() {
           </div>
         </div>
       </div>
-      <NotificationSystem isOpen={showNotifications} setIsOpen={setShowNotifications} />
     </motion.nav>
   );
 }
