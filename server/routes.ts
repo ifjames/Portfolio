@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertContactMessageSchema } from "@shared/schema";
 import { ZodError } from "zod";
+import { sendContactEmail, verifyEmailConfig } from "./email";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Get all projects
@@ -29,11 +30,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/contact", async (req, res) => {
     try {
       const validatedData = insertContactMessageSchema.parse(req.body);
+      
+      // Save message to database
       const message = await storage.createContactMessage(validatedData);
       
-      // In a real application, you would send an email here
-      // For now, we'll just log the message and return success
-      console.log("Contact message received:", message);
+      // Send email notification
+      try {
+        await sendContactEmail(validatedData);
+        console.log("Contact message received and email sent:", message);
+      } catch (emailError) {
+        console.error("Failed to send email notification:", emailError);
+        // Continue even if email fails - message is still saved
+      }
       
       res.json({ message: "Message sent successfully!" });
     } catch (error) {
@@ -43,6 +51,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           errors: error.errors 
         });
       } else {
+        console.error("Contact form error:", error);
         res.status(500).json({ message: "Failed to send message" });
       }
     }

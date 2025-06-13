@@ -1,6 +1,11 @@
+import dotenv from "dotenv";
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { verifyEmailConfig } from "./email";
+
+// Load environment variables from .env file
+dotenv.config();
 
 const app = express();
 app.use(express.json());
@@ -37,6 +42,15 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Verify email configuration on startup
+  const emailConfigValid = await verifyEmailConfig();
+  if (!emailConfigValid) {
+    log("⚠️  Email configuration not set up - contact form emails will not be sent");
+    log("   Set EMAIL_USER and EMAIL_PASS environment variables to enable email functionality");
+  } else {
+    log("✅ Email configuration verified successfully");
+  }
+
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {

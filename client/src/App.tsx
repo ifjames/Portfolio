@@ -27,9 +27,9 @@ function Router() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider defaultTheme="light">
-        <NotificationProvider>
+    <NotificationProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider defaultTheme="light">
           <TooltipProvider>
             <div className="min-h-screen">
               <div className="content-overlay min-h-screen">
@@ -42,9 +42,9 @@ function App() {
             </div>
             <Toaster />
           </TooltipProvider>
-        </NotificationProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </NotificationProvider>
   );
 }
 

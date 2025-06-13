@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useMemo, ReactNode } from "react";
 import { notifications as initialNotifications, type Notification } from "@/data/notifications";
 
 interface NotificationContextType {
@@ -16,11 +16,16 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
   const [notifications, setNotifications] = useState<Notification[]>(initialNotifications);
 
   // Auto-sort notifications by timestamp (newest first)
-  const sortedNotifications = notifications.sort((a, b) => 
-    new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+  const sortedNotifications = useMemo(() => 
+    [...notifications].sort((a, b) => 
+      new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+    ), [notifications]
   );
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const unreadCount = useMemo(() => 
+    notifications.filter(n => !n.read).length, 
+    [notifications]
+  );
 
   const markAsRead = (id: string) => {
     setNotifications(prev =>

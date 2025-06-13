@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
+import { VisuallyHidden } from "@/components/ui/visually-hidden";
 import { useTheme } from "./theme-provider";
 import { Sun, Moon, Menu, Bell } from "lucide-react";
 import { motion } from "framer-motion";
@@ -118,6 +119,12 @@ export function Navigation() {
                 </motion.div>
               </SheetTrigger>
               <SheetContent side="right" className="w-64">
+                <VisuallyHidden>
+                  <SheetTitle>Navigation Menu</SheetTitle>
+                  <SheetDescription>
+                    Mobile navigation menu with links to different sections of the portfolio
+                  </SheetDescription>
+                </VisuallyHidden>
                 <div className="flex flex-col space-y-4 mt-8">
                   {navItems.map((item) => (
                     <Link
