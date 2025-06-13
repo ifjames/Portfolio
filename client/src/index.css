@@ -53,39 +53,43 @@
     @apply border-border;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     @apply font-sans antialiased text-foreground;
     font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     position: relative;
     min-height: 100vh;
-  }
-
-  body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: 
-      radial-gradient(2px 2px at 20px 30px, #eee, transparent),
-      radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
-      radial-gradient(1px 1px at 90px 40px, #fff, transparent),
-      radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent),
-      radial-gradient(2px 2px at 160px 30px, #fff, transparent);
-    background-repeat: repeat;
-    background-size: 200px 100px;
-    animation: sparkle 20s linear infinite;
-    pointer-events: none;
-    z-index: 1;
+    overflow-x: hidden;
   }
 
   .dark body {
     background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
   }
 
-  .dark body::before {
+  .animated-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    background-image: 
+      radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.6), transparent),
+      radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.4), transparent),
+      radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.8), transparent),
+      radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.3), transparent),
+      radial-gradient(2px 2px at 160px 30px, rgba(255,255,255,0.5), transparent);
+    background-repeat: repeat;
+    background-size: 200px 100px;
+    animation: sparkle 20s linear infinite;
+  }
+
+  .dark .animated-background {
     background-image: 
       radial-gradient(2px 2px at 20px 30px, #4facfe, transparent),
       radial-gradient(2px 2px at 40px 70px, rgba(79, 172, 254, 0.6), transparent),
@@ -97,19 +101,15 @@
     animation: city-lights 25s linear infinite;
   }
 
-  html {
-    scroll-behavior: smooth;
-  }
-
   .content-overlay {
     position: relative;
-    z-index: 2;
-    background: rgba(255, 255, 255, 0.95);
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.92);
     backdrop-filter: blur(10px);
   }
 
   .dark .content-overlay {
-    background: rgba(0, 0, 0, 0.85);
+    background: rgba(0, 0, 0, 0.88);
   }
 }
 
