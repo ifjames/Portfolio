@@ -7,6 +7,7 @@ import { useTheme } from "./theme-provider";
 import { Sun, Moon, Menu, Bell } from "lucide-react";
 import { motion } from "framer-motion";
 import { NotificationSystem } from "./notification-system";
+import { useNotifications } from "@/hooks/use-notifications";
 
 const navItems = [
   { href: "/", label: "Home" },
@@ -20,6 +21,7 @@ export function Navigation() {
   const { theme, toggleTheme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const { unreadCount } = useNotifications();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -72,12 +74,14 @@ export function Navigation() {
                   onClick={() => setShowNotifications(!showNotifications)}
                 >
                   <Bell className="h-4 w-4" />
-                  <Badge
-                    variant="destructive"
-                    className="absolute -top-1 -right-1 h-4 w-4 text-xs p-0 flex items-center justify-center"
-                  >
-                    2
-                  </Badge>
+                  {unreadCount > 0 && (
+                    <Badge
+                      variant="destructive"
+                      className="absolute -top-1 -right-1 h-4 w-4 text-xs p-0 flex items-center justify-center"
+                    >
+                      {unreadCount}
+                    </Badge>
+                  )}
                 </Button>
               </motion.div>
               <NotificationSystem isOpen={showNotifications} setIsOpen={setShowNotifications} />

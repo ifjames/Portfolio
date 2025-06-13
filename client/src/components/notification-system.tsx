@@ -4,42 +4,8 @@ import { Bell, X, CheckCircle, Info, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-
-interface Notification {
-  id: string;
-  title: string;
-  message: string;
-  type: "info" | "success" | "warning";
-  timestamp: Date;
-  read: boolean;
-}
-
-const sampleNotifications: Notification[] = [
-  {
-    id: "1",
-    title: "Portfolio Updated",
-    message: "Welcome to my interactive portfolio! Feel free to explore and use the chatbot for any questions.",
-    type: "info",
-    timestamp: new Date(Date.now() - 1000 * 60 * 5), // 5 minutes ago
-    read: false,
-  },
-  {
-    id: "2",
-    title: "New Project Added",
-    message: "Check out my latest work in the projects section - Analytics Dashboard with interactive charts.",
-    type: "success",
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
-    read: false,
-  },
-  {
-    id: "3",
-    title: "Available for Work",
-    message: "I'm currently accepting new project opportunities. Let's discuss your next idea!",
-    type: "warning",
-    timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24), // 1 day ago
-    read: true,
-  },
-];
+import { useNotifications } from "@/hooks/use-notifications";
+import type { Notification } from "@/data/notifications";
 
 interface NotificationSystemProps {
   isOpen: boolean;
@@ -47,10 +13,8 @@ interface NotificationSystemProps {
 }
 
 export function NotificationSystem({ isOpen, setIsOpen }: NotificationSystemProps) {
-  const [notifications, setNotifications] = useState<Notification[]>(sampleNotifications);
+  const { sortedNotifications, unreadCount, markAsRead, removeNotification } = useNotifications();
   const [showWelcome, setShowWelcome] = useState(true);
-
-  const unreadCount = notifications.filter(n => !n.read).length;
 
   useEffect(() => {
     // Show welcome notification after 3 seconds
@@ -60,18 +24,6 @@ export function NotificationSystem({ isOpen, setIsOpen }: NotificationSystemProp
 
     return () => clearTimeout(timer);
   }, []);
-
-  const markAsRead = (id: string) => {
-    setNotifications(prev =>
-      prev.map(notification =>
-        notification.id === id ? { ...notification, read: true } : notification
-      )
-    );
-  };
-
-  const removeNotification = (id: string) => {
-    setNotifications(prev => prev.filter(notification => notification.id !== id));
-  };
 
   const getIcon = (type: Notification["type"]) => {
     switch (type) {
@@ -155,13 +107,13 @@ export function NotificationSystem({ isOpen, setIsOpen }: NotificationSystemProp
                 </div>
                 
                 <div className="max-h-96 overflow-y-auto">
-                  {notifications.length === 0 ? (
+                  {sortedNotifications.length === 0 ? (
                     <div className="p-8 text-center text-muted-foreground">
                       <Bell className="h-8 w-8 mx-auto mb-2 opacity-50" />
                       <p>No notifications</p>
                     </div>
                   ) : (
-                    notifications.map((notification) => (
+                    sortedNotifications.map((notification) => (
                       <motion.div
                         key={notification.id}
                         initial={{ opacity: 0, x: -20 }}
