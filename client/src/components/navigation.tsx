@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { useTheme } from "./theme-provider";
 import { Sun, Moon, Menu, Bell } from "lucide-react";
 import { motion } from "framer-motion";
+import { NotificationSystem } from "./notification-system";
 
 const navItems = [
   { href: "/", label: "Home" },
@@ -18,6 +19,7 @@ export function Navigation() {
   const [location] = useLocation();
   const { theme, toggleTheme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -62,6 +64,7 @@ export function Navigation() {
               variant="ghost"
               size="icon"
               className="relative bg-background/50 hover:bg-background/80"
+              onClick={() => setShowNotifications(!showNotifications)}
             >
               <Bell className="h-4 w-4" />
               <Badge
@@ -111,6 +114,7 @@ export function Navigation() {
           </div>
         </div>
       </div>
+      <NotificationSystem isOpen={showNotifications} setIsOpen={setShowNotifications} />
     </motion.nav>
   );
 }

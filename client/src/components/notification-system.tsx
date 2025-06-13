@@ -41,9 +41,13 @@ const sampleNotifications: Notification[] = [
   },
 ];
 
-export function NotificationSystem() {
+interface NotificationSystemProps {
+  isOpen: boolean;
+  setIsOpen: (open: boolean) => void;
+}
+
+export function NotificationSystem({ isOpen, setIsOpen }: NotificationSystemProps) {
   const [notifications, setNotifications] = useState<Notification[]>(sampleNotifications);
-  const [isOpen, setIsOpen] = useState(false);
   const [showWelcome, setShowWelcome] = useState(true);
 
   const unreadCount = notifications.filter(n => !n.read).length;

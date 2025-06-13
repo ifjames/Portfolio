@@ -71,6 +71,60 @@ export class MemStorage implements IStorage {
         liveUrl: "https://example-analytics.com",
         githubUrl: "https://github.com/example/analytics",
         featured: true
+      },
+      {
+        title: "Social Media Dashboard",
+        description: "Unified social media management platform with analytics and scheduling",
+        image: "https://images.unsplash.com/photo-1611262588024-d12430b98920?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
+        technologies: ["React", "TypeScript", "Node.js", "Redis"],
+        liveUrl: "https://example-social.com",
+        githubUrl: "https://github.com/example/social",
+        featured: false
+      },
+      {
+        title: "Weather App",
+        description: "Real-time weather application with location-based forecasts and alerts",
+        image: "https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
+        technologies: ["React Native", "OpenWeather API", "SQLite"],
+        liveUrl: "https://example-weather.com",
+        githubUrl: "https://github.com/example/weather",
+        featured: false
+      },
+      {
+        title: "Portfolio Website",
+        description: "Responsive portfolio website with modern design and animations",
+        image: "https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
+        technologies: ["Next.js", "Tailwind CSS", "Framer Motion"],
+        liveUrl: "https://example-portfolio.com",
+        githubUrl: "https://github.com/example/portfolio",
+        featured: false
+      },
+      {
+        title: "Restaurant Management System",
+        description: "Complete restaurant management with order tracking and inventory",
+        image: "https://images.unsplash.com/photo-1514933651103-005eec06c04b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
+        technologies: ["Angular", "Express.js", "MySQL", "Socket.io"],
+        liveUrl: "https://example-restaurant.com",
+        githubUrl: "https://github.com/example/restaurant",
+        featured: false
+      },
+      {
+        title: "Learning Management System",
+        description: "Educational platform with course management and progress tracking",
+        image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
+        technologies: ["Vue.js", "Django", "PostgreSQL", "AWS S3"],
+        liveUrl: "https://example-lms.com",
+        githubUrl: "https://github.com/example/lms",
+        featured: false
+      },
+      {
+        title: "Fitness Tracker",
+        description: "Personal fitness tracking app with workout plans and progress monitoring",
+        image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
+        technologies: ["React Native", "Firebase", "Chart.js"],
+        liveUrl: "https://example-fitness.com",
+        githubUrl: "https://github.com/example/fitness",
+        featured: false
       }
     ];
 

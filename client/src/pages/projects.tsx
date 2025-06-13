@@ -2,8 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { ProjectCard } from "@/components/project-card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
-import { Link } from "wouter";
+import { ArrowRight, Filter } from "lucide-react";
+import { useState } from "react";
 import type { Project } from "@shared/schema";
 
 export default function Projects() {
@@ -11,7 +11,21 @@ export default function Projects() {
     queryKey: ["/api/projects"],
   });
 
-  const featuredProjects = projects?.filter(project => project.featured) || [];
+  const [showAll, setShowAll] = useState(false);
+  const [selectedTech, setSelectedTech] = useState<string | null>(null);
+
+  const allTechnologies = projects ? 
+    [...new Set(projects.flatMap(p => p.technologies))] : [];
+
+  const filteredProjects = projects?.filter(project => {
+    if (selectedTech && !project.technologies.includes(selectedTech)) {
+      return false;
+    }
+    if (!showAll && !project.featured) {
+      return false;
+    }
+    return true;
+  }) || [];
 
   if (isLoading) {
     return (
@@ -30,32 +44,78 @@ export default function Projects() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">Latest Work</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4">
+            {showAll ? "All Projects" : "Featured Work"}
+          </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Here are some of my recent projects showcasing different technologies
-            and design approaches
+            {showAll 
+              ? "Complete portfolio showcasing my skills across different technologies" 
+              : "Here are some of my recent projects showcasing different technologies and design approaches"
+            }
           </p>
         </motion.div>
 
+        {/* Filter Controls */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="flex flex-wrap gap-4 justify-center mb-12"
+        >
+          <Button
+            variant={showAll ? "default" : "outline"}
+            onClick={() => setShowAll(!showAll)}
+            className="flex items-center gap-2"
+          >
+            <Filter className="h-4 w-4" />
+            {showAll ? "Show Featured Only" : "Show All Projects"}
+          </Button>
+          
+          {showAll && (
+            <div className="flex flex-wrap gap-2">
+              <Button
+                variant={selectedTech === null ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSelectedTech(null)}
+              >
+                All Technologies
+              </Button>
+              {allTechnologies.map((tech) => (
+                <Button
+                  key={tech}
+                  variant={selectedTech === tech ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedTech(tech)}
+                >
+                  {tech}
+                </Button>
+              ))}
+            </div>
+          )}
+        </motion.div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {featuredProjects.map((project, index) => (
+          {filteredProjects.map((project, index) => (
             <ProjectCard key={project.id} project={project} index={index} />
           ))}
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="text-center mt-12"
-        >
-          <Button asChild variant="link" className="text-primary">
-            <Link href="/projects">
+        {!showAll && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.8 }}
+            className="text-center mt-12"
+          >
+            <Button 
+              onClick={() => setShowAll(true)}
+              className="flex items-center gap-2"
+            >
               View All Projects
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
-        </motion.div>
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          </motion.div>
+        )}
       </div>
     </section>
   );
