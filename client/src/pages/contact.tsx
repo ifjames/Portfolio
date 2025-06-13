@@ -10,7 +10,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Mail, Phone, MapPin, Linkedin, Github, Twitter, Loader2 } from "lucide-react";
+import { Mail, Phone, MapPin, Linkedin, Instagram, Loader2 } from "lucide-react";
+import { FaFacebook } from "react-icons/fa";
 
 const contactSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -25,7 +26,7 @@ const contactInfo = [
   {
     icon: Mail,
     label: "Email",
-    value: "alex.johnson@email.com",
+    value: "james.castillo@email.com",
     color: "bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400",
   },
   {
@@ -43,9 +44,9 @@ const contactInfo = [
 ];
 
 const socialLinks = [
-  { icon: Linkedin, href: "#", color: "hover:bg-blue-600" },
-  { icon: Github, href: "#", color: "hover:bg-gray-900 dark:hover:bg-gray-600" },
-  { icon: Twitter, href: "#", color: "hover:bg-blue-400" },
+  { icon: FaFacebook, href: "#", color: "hover:bg-blue-600" },
+  { icon: Linkedin, href: "#", color: "hover:bg-blue-700" },
+  { icon: Instagram, href: "#", color: "hover:bg-pink-600" },
 ];
 
 export default function Contact() {

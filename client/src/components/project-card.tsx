@@ -15,7 +15,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="flip-card h-80"
+      className="flip-card h-96"
     >
       <div className="flip-card-inner relative w-full h-full">
         {/* Front */}
@@ -29,11 +29,11 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
             <h3 className="text-xl font-semibold mb-2 text-card-foreground">
               {project.title}
             </h3>
-            <p className="text-muted-foreground text-sm mb-4">
+            <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
               {project.description}
             </p>
             <div className="flex flex-wrap gap-2">
-              {project.technologies?.slice(0, 2).map((tech) => (
+              {project.technologies?.map((tech) => (
                 <Badge key={tech} variant="secondary" className="text-xs">
                   {tech}
                 </Badge>

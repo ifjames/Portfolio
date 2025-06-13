@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Navigation } from "@/components/navigation";
+import { Chatbot } from "@/components/chatbot";
 import Home from "@/pages/home";
 import Projects from "@/pages/projects";
 import About from "@/pages/about";
@@ -33,6 +34,7 @@ function App() {
             <main className="pt-16">
               <Router />
             </main>
+            <Chatbot />
           </div>
           <Toaster />
         </TooltipProvider>
