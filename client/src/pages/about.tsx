@@ -19,7 +19,7 @@ export default function About() {
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-6">About Me</h2>
             <p className="text-lg text-muted-foreground mb-6">
-              I'm a passionate full-stack developer with 5+ years of experience
+              I'm James Matthew Castillo, a passionate full-stack developer with 5+ years of experience
               building modern web applications. I love creating user-centered
               designs and writing clean, efficient code.
             </p>
