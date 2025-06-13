@@ -2,12 +2,67 @@ import { motion } from "framer-motion";
 import { ExternalLink, Github } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { 
+  SiReact, 
+  SiNodedotjs, 
+  SiTypescript, 
+  SiJavascript, 
+  SiPython, 
+  SiVuedotjs, 
+  SiAngular, 
+  SiMongodb, 
+  SiPostgresql, 
+  SiMysql, 
+  SiRedis, 
+  SiFirebase, 
+  SiSocketdotio, 
+  SiTailwindcss, 
+  SiNextdotjs,
+  SiExpress,
+  SiDjango,
+  SiAmazon,
+  SiStripe,
+  SiFramer
+} from "react-icons/si";
 import type { Project } from "@shared/schema";
 
 interface ProjectCardProps {
   project: Project;
   index: number;
 }
+
+const getTechIcon = (tech: string) => {
+  const iconMap: { [key: string]: React.ComponentType<{ className?: string }> } = {
+    'React': SiReact,
+    'React Native': SiReact,
+    'Node.js': SiNodedotjs,
+    'TypeScript': SiTypescript,
+    'JavaScript': SiJavascript,
+    'Python': SiPython,
+    'Vue.js': SiVuedotjs,
+    'Angular': SiAngular,
+    'MongoDB': SiMongodb,
+    'PostgreSQL': SiPostgresql,
+    'MySQL': SiMysql,
+    'Redis': SiRedis,
+    'Firebase': SiFirebase,
+    'Socket.io': SiSocketdotio,
+    'Tailwind CSS': SiTailwindcss,
+    'Next.js': SiNextdotjs,
+    'Express.js': SiExpress,
+    'Django': SiDjango,
+    'AWS': SiAmazon,
+    'AWS S3': SiAmazon,
+    'Stripe': SiStripe,
+    'Framer Motion': SiFramer,
+    'D3.js': SiJavascript,
+    'Chart.js': SiJavascript,
+    'SQLite': SiPostgresql,
+    'OpenWeather API': SiJavascript
+  };
+  
+  return iconMap[tech];
+};
 
 export function ProjectCard({ project, index }: ProjectCardProps) {
   return (
@@ -33,11 +88,15 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
               {project.description}
             </p>
             <div className="flex flex-wrap gap-2">
-              {project.technologies?.map((tech) => (
-                <Badge key={tech} variant="secondary" className="text-xs">
-                  {tech}
-                </Badge>
-              ))}
+              {project.technologies?.map((tech) => {
+                const IconComponent = getTechIcon(tech);
+                return (
+                  <Badge key={tech} variant="secondary" className="text-xs flex items-center gap-1">
+                    {IconComponent && <IconComponent className="h-3 w-3" />}
+                    {tech}
+                  </Badge>
+                );
+              })}
             </div>
           </div>
         </div>

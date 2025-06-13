@@ -15,7 +15,12 @@ export default function Projects() {
   const [selectedTech, setSelectedTech] = useState<string | null>(null);
 
   const allTechnologies = projects ? 
-    [...new Set(projects.flatMap(p => p.technologies))] : [];
+    projects.reduce((acc: string[], project) => {
+      project.technologies.forEach(tech => {
+        if (!acc.includes(tech)) acc.push(tech);
+      });
+      return acc;
+    }, []) : [];
 
   const filteredProjects = projects?.filter(project => {
     if (selectedTech && !project.technologies.includes(selectedTech)) {
