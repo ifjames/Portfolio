@@ -2,13 +2,10 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "@/components/ui/sheet";
-import { Badge } from "@/components/ui/badge";
 import { VisuallyHidden } from "@/components/ui/visually-hidden";
 import { useTheme } from "./theme-provider";
-import { Sun, Moon, Menu, Bell } from "lucide-react";
+import { Sun, Moon, Menu } from "lucide-react";
 import { motion } from "framer-motion";
-import { NotificationSystem } from "./notification-system";
-import { useNotifications } from "@/hooks/use-notifications";
 
 const navItems = [
   { href: "/", label: "Home" },
@@ -21,8 +18,6 @@ export function Navigation() {
   const [location] = useLocation();
   const { theme, toggleTheme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
-  const [showNotifications, setShowNotifications] = useState(false);
-  const { unreadCount } = useNotifications();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -63,31 +58,6 @@ export function Navigation() {
           </div>
 
           <div className="flex items-center space-x-2">
-            <div className="relative">
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: [1, 1.2, 0.95, 1.1, 1] }}
-              >
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="relative bg-background/50 hover:bg-background/80"
-                  onClick={() => setShowNotifications(!showNotifications)}
-                >
-                  <Bell className="h-4 w-4" />
-                  {unreadCount > 0 && (
-                    <Badge
-                      variant="destructive"
-                      className="absolute -top-1 -right-1 h-4 w-4 text-xs p-0 flex items-center justify-center"
-                    >
-                      {unreadCount}
-                    </Badge>
-                  )}
-                </Button>
-              </motion.div>
-              <NotificationSystem isOpen={showNotifications} setIsOpen={setShowNotifications} />
-            </div>
-            
             <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: [1, 1.2, 0.95, 1.1, 1] }}
@@ -97,6 +67,7 @@ export function Navigation() {
                 size="icon"
                 onClick={toggleTheme}
                 className="bg-background/50 hover:bg-background/80"
+                data-testid="button-theme-toggle"
               >
                 {theme === "dark" ? (
                   <Sun className="h-4 w-4 text-yellow-500" />
