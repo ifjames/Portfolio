@@ -36,14 +36,14 @@ export function Mascot() {
         damping: 15
       }}
     >
-      {/* Enhanced Speech Bubble */}
+      {/* Enhanced Speech Bubble - Floats with mascot */}
       <motion.div
         className="relative bg-gradient-to-r from-cyan-500/20 via-blue-500/20 to-purple-500/20 dark:from-cyan-400/30 dark:via-blue-400/30 dark:to-purple-400/30 backdrop-blur-md rounded-2xl px-6 py-4 mb-4 shadow-2xl border-2 border-cyan-400/40 dark:border-cyan-400/60 overflow-hidden"
         initial={{ opacity: 0, scale: 0.8, y: -10 }}
         animate={{ 
           opacity: 1, 
           scale: 1,
-          y: 0,
+          y: [0, -8, 0],
           boxShadow: [
             "0 10px 30px rgba(34, 211, 238, 0.2)",
             "0 10px 40px rgba(34, 211, 238, 0.4)",
@@ -53,6 +53,12 @@ export function Mascot() {
         transition={{ 
           delay: 1, 
           duration: 0.5,
+          y: {
+            duration: 3,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 1
+          },
           boxShadow: {
             duration: 3,
             repeat: Infinity,
@@ -62,7 +68,7 @@ export function Mascot() {
       >
         {/* Animated background shimmer */}
         <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent"
+          className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/20 dark:via-cyan-300/30 to-transparent"
           animate={{
             x: ["-200%", "200%"],
           }}
@@ -77,7 +83,7 @@ export function Mascot() {
         {[...Array(3)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-1 h-1 bg-cyan-400 rounded-full blur-sm"
+            className="absolute w-1 h-1 bg-cyan-400 dark:bg-cyan-300 rounded-full blur-sm"
             style={{
               left: `${20 + i * 30}%`,
               top: `${30 + i * 20}%`,
@@ -98,7 +104,7 @@ export function Mascot() {
         <motion.div className="relative flex items-center gap-2">
           {/* Terminal prompt symbol */}
           <motion.span
-            className="text-lg font-bold text-cyan-400 dark:text-cyan-300 font-mono"
+            className="text-lg font-bold text-cyan-500 dark:text-cyan-300 font-mono"
             animate={{
               scale: [1, 1.2, 1],
             }}
@@ -113,7 +119,7 @@ export function Mascot() {
           
           {/* Main text with gradient */}
           <motion.p 
-            className="text-base sm:text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 dark:from-cyan-300 dark:via-blue-400 dark:to-purple-400 whitespace-nowrap font-mono tracking-wider"
+            className="text-base sm:text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 dark:from-cyan-300 dark:via-blue-300 dark:to-purple-300 whitespace-nowrap font-mono tracking-wider"
             animate={{ 
               backgroundPosition: ["0%", "100%", "0%"],
             }}
@@ -131,7 +137,7 @@ export function Mascot() {
           
           {/* Blinking cursor */}
           <motion.span
-            className="text-base sm:text-lg font-bold text-cyan-400 dark:text-cyan-300 font-mono"
+            className="text-base sm:text-lg font-bold text-cyan-500 dark:text-cyan-300 font-mono"
             animate={{
               opacity: [1, 0, 1],
             }}
