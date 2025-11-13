@@ -19,88 +19,58 @@ export interface Project {
 }
 
 // Global setting to override all individual lock settings
-export const EVERYTHING_LOCKED = true; // Set to true to lock all projects globally
+export const EVERYTHING_LOCKED = false; // Set to true to lock all projects globally
 
 export const projects: Project[] = [
   {
     id: 1,
-    title: "E-Shop Platform",
-    description: "Modern shopping platform with React, Node.js, and Stripe integration",
-    image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
-    technologies: ["React", "Node.js", "Stripe", "MongoDB"],
-    liveUrl: "https://example-ecommerce.com",
-    githubUrl: "https://github.com/example/ecommerce",
+    title: "Project Kolekta",
+    description: "A comprehensive collection management system built with React and Firebase, featuring real-time data synchronization and robust backend powered by Node.js",
+    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
+    technologies: ["React", "Firebase", "Node.js"],
+    liveUrl: "https://projectkolekta.web.app/",
     featured: true,
-    category: "Web Development",
-    developmentMode: true,
-    developmentMessage: "In Active Development"
+    category: "Web Development"
   },
   {
     id: 2,
-    title: "Task Management App",
-    description: "Collaborative task management with real-time updates and team features",
-    image: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
-    technologies: ["Vue.js", "Firebase", "Socket.io"],
-    liveUrl: "https://example-tasks.com",
-    githubUrl: "https://github.com/example/tasks",
+    title: "Driving School Platform",
+    description: "A clean and intuitive driving school management platform built with vanilla web technologies and Firebase for seamless user experience",
+    image: "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
+    technologies: ["HTML", "CSS", "Firebase"],
+    liveUrl: "https://driving-5488c.web.app/",
     featured: true,
-    category: "Web Development",
-    codeLocked: true,
-    codeLockedMessage: "Private Repository"
+    category: "Web Development"
   },
   {
     id: 3,
-    title: "Analytics Dashboard",
-    description: "Data visualization platform with interactive charts and reporting",
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
-    technologies: ["D3.js", "Python", "PostgreSQL"],
-    liveUrl: "https://example-analytics.com",
-    githubUrl: "https://github.com/example/analytics",
+    title: "Project Kamay",
+    description: "Full-stack application combining React frontend with Express.js backend and Firebase integration for efficient data management and user authentication",
+    image: "https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
+    technologies: ["React", "Firebase", "Express.js"],
+    liveUrl: "https://projectkamay.web.app/",
     featured: true,
-    category: "Data Visualization",
-    liveUrlLocked: true,
-    liveUrlLockedMessage: "In Development"
+    category: "Web Development"
   },
   {
     id: 4,
-    title: "Weather Mobile App",
-    description: "React Native weather app with location-based forecasts",
-    image: "https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
-    technologies: ["React Native", "OpenWeather API", "SQLite"],
-    liveUrl: "https://example-weather.com",
-    githubUrl: "https://github.com/example/weather-app",
-    featured: false,
-    category: "Mobile Development",
-    developmentMode: true,
-    developmentMessage: "Beta Testing"
+    title: "Ubian Food Hub",
+    description: "Dynamic food ordering and management platform featuring React components, Firebase backend, and Express.js API for seamless restaurant operations",
+    image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
+    technologies: ["React", "Firebase", "Express.js"],
+    liveUrl: "https://ubianfoodhub.web.app/",
+    featured: true,
+    category: "Web Development"
   },
   {
     id: 5,
-    title: "Chat Application",
-    description: "Real-time messaging platform with file sharing and group chats",
-    image: "https://images.unsplash.com/photo-1577563908411-5077b6dc7624?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
-    technologies: ["Socket.io", "Express.js", "MongoDB", "React"],
-    liveUrl: "https://example-chat.com",
-    githubUrl: "https://github.com/example/chat-app",
-    featured: false,
-    category: "Web Development",
-    codeLocked: true,
-    codeLockedMessage: "Proprietary Code",
-    liveUrlLocked: true,
-    liveUrlLockedMessage: "Coming Soon"
-  },
-  {
-    id: 6,
-    title: "Portfolio Website",
-    description: "Personal portfolio website built with modern web technologies",
-    image: "https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
-    technologies: ["Next.js", "Tailwind CSS", "Framer Motion"],
-    liveUrl: "https://example-portfolio.com",
-    githubUrl: "https://github.com/example/portfolio",
-    featured: false,
-    category: "Web Development",
-    liveUrlLocked: true,
-    liveUrlLockedMessage: "Work in Progress"
+    title: "Decoblu USA",
+    description: "International client project delivering a modern e-commerce solution with React frontend and Node.js backend for seamless user experience and business operations",
+    image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
+    technologies: ["React", "Node.js"],
+    liveUrl: "https://decobluusa.com/",
+    featured: true,
+    category: "Web Development"
   }
 ];
 
