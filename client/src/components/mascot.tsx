@@ -56,8 +56,7 @@ export function Mascot() {
           y: {
             duration: 3,
             repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1
+            ease: "easeInOut"
           },
           boxShadow: {
             duration: 3,
