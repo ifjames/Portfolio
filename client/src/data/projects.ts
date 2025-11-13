@@ -100,8 +100,9 @@ export const projects: Project[] = [
     category: "Web Development",
     privateAccess: true,
     privateAccessMessage: "University of Batangas Students Only.",
-    privateAccessDialogTitle: "University of Batangas Capstone Project",
-    privateAccessDialogDescription: "This is a capstone project developed exclusively for University of Batangas. Account creation and full access is restricted to UB School students and staff only. You can view the project, but to create an account or access certain features, please contact me with your UB credentials.",
+    privateAccessDialogTitle: "University of Batangas Client Project",
+    privateAccessDialogDescription:
+      "This is a capstone project developed exclusively for University of Batangas Students. Account creation and full access is restricted to UB School students and staff only. You can view the project, but to create an account or access certain features, please contact me.",
   },
   {
     id: 5,
