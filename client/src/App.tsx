@@ -4,6 +4,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/theme-provider";
+import { NotificationProvider } from "@/hooks/use-notifications";
 import { Navigation } from "@/components/navigation";
 import { Chatbot } from "@/components/chatbot";
 import Home from "@/pages/home";
@@ -26,22 +27,24 @@ function Router() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider defaultTheme="light">
-        <TooltipProvider>
-          <div className="min-h-screen">
-            <div className="content-overlay min-h-screen">
-              <Navigation />
-              <main className="pt-16">
-                <Router />
-              </main>
-              <Chatbot />
+    <NotificationProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider defaultTheme="light">
+          <TooltipProvider>
+            <div className="min-h-screen">
+              <div className="content-overlay min-h-screen">
+                <Navigation />
+                <main className="pt-16">
+                  <Router />
+                </main>
+                <Chatbot />
+              </div>
             </div>
-          </div>
-          <Toaster />
-        </TooltipProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+            <Toaster />
+          </TooltipProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </NotificationProvider>
   );
 }
 

@@ -3,8 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { MessageCircle, X, Send, Bot, User } from "lucide-react";
-import { apiRequest } from "@/lib/queryClient";
 
 interface Message {
   id: string;
@@ -13,22 +13,55 @@ interface Message {
   timestamp: Date;
 }
 
+const botResponses: Record<string, string> = {
+  "hello": "Hi there! I'm James's assistant. How can I help you today?",
+  "hi": "Hello! I'm here to answer any questions about James Castillo. What would you like to know?",
+  "location": "James is based in Batangas City, Philippines and is open to both local and remote opportunities worldwide.",
+  "where": "James is located in Batangas City, Philippines. He's available for work worldwide through remote collaboration.",
+  "availability": "James is currently available for new opportunities! He's open to discussing projects and job opportunities.",
+  "available": "Yes, James is available for new projects and job opportunities. Feel free to reach out through the contact form!",
+  "time": "James is available during Philippine Time business hours (9 AM - 6 PM PHT) but can accommodate different time zones for international clients.",
+  "hours": "James typically works during Philippine Time business hours but is flexible with scheduling for client needs across different time zones.",
+  "skills": "James specializes in full-stack development with expertise in React, Node.js, TypeScript, and modern web technologies.",
+  "experience": "James has 5+ years of experience in full-stack development, creating modern web applications and user-centered designs.",
+  "projects": "You can view James's latest projects in the Projects section. He's worked on e-commerce platforms, task management apps, and analytics dashboards.",
+  "contact": "You can reach James through the contact form on this website, or connect with him on LinkedIn, Facebook, or Instagram.",
+  "email": "You can email James at jamesmatthewcastillo4@gmail.com or use the contact form on this website.",
+  "phone": "James can be reached at +63 960 381 8382 for urgent inquiries.",
+  "resume": "You can download James's resume from the About section of this website.",
+  "technologies": "James works with React, Vue.js, Angular, Node.js, Python, PostgreSQL, MongoDB, AWS, Docker, and many other modern technologies.",
+  "philippines": "Yes, James is based in Batangas City, Philippines. He's available for both local Philippine projects and international remote work.",
+  "timezone": "James works in Philippine Time (PHT/GMT+8). He's flexible with scheduling and can accommodate meetings with international clients.",
+  "default": "I'm here to help! You can ask me about James's location, availability, skills, experience, or how to contact him. What would you like to know?"
+};
+
+function getBotResponse(userMessage: string): string {
+  const message = userMessage.toLowerCase().trim();
+  
+  for (const [key, response] of Object.entries(botResponses)) {
+    if (message.includes(key)) {
+      return response;
+    }
+  }
+  
+  return botResponses.default;
+}
+
 export function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
-      text: "Hi! I'm James's AI assistant. Ask me anything about his projects, skills, experience, or availability! I can provide detailed information about his work.",
+      text: "Hi! I'm James's virtual assistant. Ask me about his availability, location, skills, or how to contact him!",
       isBot: true,
       timestamp: new Date(),
     },
   ]);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [lastMessageTime, setLastMessageTime] = useState<number>(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
+
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -45,7 +78,7 @@ export function Chatbot() {
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       const target = event.target as Node;
-
+      
       // Don't close if clicking on the toggle button or inside the chat
       if (
         chatContainerRef.current && 
@@ -78,59 +111,25 @@ export function Chatbot() {
     };
 
     setMessages(prev => [...prev, userMessage]);
-    const userInput = inputValue;
     setInputValue("");
     setIsTyping(true);
-    setError(null);
 
-    try {
-      const response = await apiRequest("POST", "/api/chat", { message: userInput });
-      const data = await response.json();
-
-      if (!response.ok) {
-        if (response.status === 429) {
-          throw new Error('The AI is taking a break. Please try again in a few moments or use the contact form below to reach James directly.');
-        }
-        throw new Error(data.message || 'Failed to get response');
-      }
-
+    // Simulate typing delay
+    setTimeout(() => {
       const botResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: data.message,
+        text: getBotResponse(inputValue),
         isBot: true,
         timestamp: new Date(),
       };
 
       setMessages(prev => [...prev, botResponse]);
-    } catch (err: any) {
-      console.error('Chat error:', err);
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        text: err.message || "Sorry, I'm having trouble connecting right now. Please try again or use the contact form to reach James directly.",
-        isBot: true,
-        timestamp: new Date(),
-      };
-      setMessages(prev => [...prev, errorMessage]);
-    } finally {
       setIsTyping(false);
-    }
+    }, 1000);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
-      // Rate limiting: 3 seconds between messages
-      const now = Date.now();
-      if (now - lastMessageTime < 3000) {
-        const errorMessage: Message = {
-          id: Date.now().toString(),
-          text: "Please wait a moment before sending another message.",
-          isBot: true,
-          timestamp: new Date(),
-        };
-        setMessages(prev => [...prev, errorMessage]);
-        return;
-      }
-      setLastMessageTime(now);
       sendMessage();
     }
   };
@@ -186,7 +185,7 @@ export function Chatbot() {
                   James's Assistant
                 </CardTitle>
               </CardHeader>
-
+              
               <CardContent className="flex-1 p-0 flex flex-col min-h-0">
                 <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-4 space-y-4">
                   {messages.map((message) => (
@@ -222,7 +221,7 @@ export function Chatbot() {
                       </div>
                     </motion.div>
                   ))}
-
+                  
                   {isTyping && (
                     <motion.div
                       initial={{ opacity: 0, y: 10 }}
@@ -245,7 +244,7 @@ export function Chatbot() {
                   )}
                   <div ref={messagesEndRef} />
                 </div>
-
+                
                 <div className="p-4 border-t">
                   <div className="flex gap-2">
                     <Input
