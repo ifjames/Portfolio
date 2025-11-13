@@ -19,10 +19,36 @@ export interface Project {
   // Private access - users can visit but not create accounts
   privateAccess?: boolean;
   privateAccessMessage?: string;
+  // Private access dialog customization
+  privateAccessDialogTitle?: string;
+  privateAccessDialogDescription?: string;
 }
 
 // Global setting to override all individual lock settings
 export const EVERYTHING_LOCKED = false; // Set to true to lock all projects globally
+
+/*
+  Private Access Configuration Guide:
+  
+  To mark a project as private access (visitors can view but not create accounts):
+  
+  1. Set privateAccess: true
+  2. Set privateAccessMessage: "Brief message shown on the card badge"
+  3. Optionally customize the dialog:
+     - privateAccessDialogTitle: "Custom dialog title"
+     - privateAccessDialogDescription: "Full explanation shown in the dialog"
+  
+  Example:
+  {
+    ...project fields,
+    privateAccess: true,
+    privateAccessMessage: "Client Project - Restricted Access",
+    privateAccessDialogTitle: "Confidential Client Project",
+    privateAccessDialogDescription: "This is a private client project with restricted access. Only authorized users can create accounts. Contact me if you need access.",
+  }
+  
+  If you don't provide custom dialog fields, it will use default messages.
+*/
 
 export const projects: Project[] = [
   {
@@ -74,6 +100,8 @@ export const projects: Project[] = [
     category: "Web Development",
     privateAccess: true,
     privateAccessMessage: "University of Batangas Students Only.",
+    privateAccessDialogTitle: "University of Batangas Capstone Project",
+    privateAccessDialogDescription: "This is a capstone project developed exclusively for University of Batangas. Account creation and full access is restricted to UB School students and staff only. You can view the project, but to create an account or access certain features, please contact me with your UB credentials.",
   },
   {
     id: 5,

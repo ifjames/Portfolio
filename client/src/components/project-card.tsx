@@ -343,20 +343,26 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">
               <ShieldAlert className="w-5 h-5 text-amber-600 dark:text-amber-500" />
-              Private Access Project
+              {project.privateAccessDialogTitle || "Private Access Project"}
             </AlertDialogTitle>
             <AlertDialogDescription className="space-y-2">
-              <p>
-                This project has restricted access for account creation and certain features.
-              </p>
-              {project.privateAccessMessage && (
-                <p className="text-amber-700 dark:text-amber-400 font-medium">
-                  {project.privateAccessMessage}
-                </p>
+              {project.privateAccessDialogDescription ? (
+                <p>{project.privateAccessDialogDescription}</p>
+              ) : (
+                <>
+                  <p>
+                    This project has restricted access for account creation and certain features.
+                  </p>
+                  {project.privateAccessMessage && (
+                    <p className="text-amber-700 dark:text-amber-400 font-medium">
+                      {project.privateAccessMessage}
+                    </p>
+                  )}
+                  <p>
+                    You can still view the project, but you may need to contact me for full access or account creation.
+                  </p>
+                </>
               )}
-              <p>
-                You can still view the project, but you may need to contact me for full access or account creation.
-              </p>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
