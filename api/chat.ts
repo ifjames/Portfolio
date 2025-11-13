@@ -1,11 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import OpenAI from 'openai';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
-// the newest OpenAI model is "gpt-5" which was released August 7, 2025. do not change this unless explicitly requested by the user
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
-const PORTFOLIO_CONTEXT = `
-You are a friendly AI assistant for James Matthew Castillo's portfolio website. You help visitors learn about James and his work.
+const PORTFOLIO_CONTEXT = `You are a friendly AI assistant for James Matthew Castillo's portfolio website. You help visitors learn about James and his work.
 
 About James:
 - Full-stack developer based in Batangas City, Philippines
@@ -78,8 +74,7 @@ Instructions:
 - If asked about a specific project, give comprehensive information
 - Encourage visitors to check out the live projects or contact James
 - If you don't know something, be honest and suggest they contact James directly
-- Keep responses concise but informative
-`;
+- Keep responses concise but informative`;
 
 export default async function handler(
   req: VercelRequest,
@@ -96,29 +91,19 @@ export default async function handler(
       return res.status(400).json({ message: 'Message is required' });
     }
 
-    const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-    if (!OPENAI_API_KEY) {
+    const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+    if (!GEMINI_API_KEY) {
       return res.status(500).json({ 
-        message: 'AI service not configured' 
+        message: 'AI service not configured. Please add GEMINI_API_KEY.' 
       });
     }
 
-    const response = await openai.chat.completions.create({
-      model: "gpt-5",
-      messages: [
-        {
-          role: "system",
-          content: PORTFOLIO_CONTEXT
-        },
-        {
-          role: "user",
-          content: message
-        }
-      ],
-      max_completion_tokens: 500,
-    });
+    const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
 
-    const botReply = response.choices[0].message.content;
+    const prompt = `${PORTFOLIO_CONTEXT}\n\nUser: ${message}\nAssistant:`;
+    const result = await model.generateContent(prompt);
+    const botReply = result.response.text();
 
     return res.status(200).json({ 
       message: botReply 

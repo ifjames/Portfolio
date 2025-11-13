@@ -21,6 +21,12 @@ This is a full-stack portfolio website built with React, TypeScript, Express, an
 - **Configuration**: Requires `BREVO_API_KEY` environment variable
 - **Recipient**: jamesmatthewcastillo4@gmail.com
 
+### AI Chatbot
+- **Provider**: Google Gemini (completely free)
+- **Model**: gemini-2.0-flash-exp
+- **Configuration**: Requires `GEMINI_API_KEY` environment variable
+- **Features**: Context-aware assistant that knows about all projects, skills, and contact info
+
 ## Key Features
 - Portfolio showcase with project cards
 - Contact form with email notifications
@@ -41,13 +47,27 @@ Serverless functions in `/api` folder handle API requests:
 
 ### Required:
 - `BREVO_API_KEY` - Brevo API key for sending emails
+- `GEMINI_API_KEY` - Google Gemini API key for AI chatbot (completely free)
 
 ### Setup Instructions:
+
+#### Brevo (Email Service):
 1. Sign up at https://www.brevo.com/
 2. Get API key from Settings → SMTP & API → API Keys
 3. Add to Vercel project environment variables
 
+#### Google Gemini (AI Chatbot):
+1. Go to https://aistudio.google.com/apikey
+2. Sign in with your Google account
+3. Click "Create API Key"
+4. Copy the API key
+5. Add to Vercel project environment variables as `GEMINI_API_KEY`
+6. Note: Completely free with generous rate limits (60 requests/minute)
+
 ## Recent Changes
+- **2025-11-13**: Replaced OpenAI with Google Gemini for free AI chatbot service
+- **2025-11-13**: Removed notification system from the application
+- **2025-11-13**: Added AI-powered chatbot with project context and knowledge
 - **2025-01-13**: Restructured backend for Vercel deployment compatibility
 - **2025-01-13**: Added Brevo email integration for serverless contact form
 - **2025-01-13**: Created vercel.json configuration

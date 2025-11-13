@@ -4,10 +4,7 @@ import { storage } from "./storage";
 import { insertContactMessageSchema } from "@shared/schema";
 import { ZodError } from "zod";
 import { sendContactEmail, verifyEmailConfig } from "./email";
-import OpenAI from "openai";
-
-// the newest OpenAI model is "gpt-5" which was released August 7, 2025. do not change this unless explicitly requested by the user
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Get all projects
@@ -70,15 +67,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: 'Message is required' });
       }
 
-      const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-      if (!OPENAI_API_KEY) {
+      const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+      if (!GEMINI_API_KEY) {
         return res.status(500).json({ 
-          message: 'AI service not configured' 
+          message: 'AI service not configured. Please add GEMINI_API_KEY.' 
         });
       }
 
-      const PORTFOLIO_CONTEXT = `
-You are a friendly AI assistant for James Matthew Castillo's portfolio website. You help visitors learn about James and his work.
+      const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
+
+      const PORTFOLIO_CONTEXT = `You are a friendly AI assistant for James Matthew Castillo's portfolio website. You help visitors learn about James and his work.
 
 About James:
 - Full-stack developer based in Batangas City, Philippines
@@ -151,25 +150,11 @@ Instructions:
 - If asked about a specific project, give comprehensive information
 - Encourage visitors to check out the live projects or contact James
 - If you don't know something, be honest and suggest they contact James directly
-- Keep responses concise but informative
-`;
+- Keep responses concise but informative`;
 
-      const response = await openai.chat.completions.create({
-        model: "gpt-5",
-        messages: [
-          {
-            role: "system",
-            content: PORTFOLIO_CONTEXT
-          },
-          {
-            role: "user",
-            content: message
-          }
-        ],
-        max_completion_tokens: 500,
-      });
-
-      const botReply = response.choices[0].message.content;
+      const prompt = `${PORTFOLIO_CONTEXT}\n\nUser: ${message}\nAssistant:`;
+      const result = await model.generateContent(prompt);
+      const botReply = result.response.text();
 
       res.json({ message: botReply });
 
