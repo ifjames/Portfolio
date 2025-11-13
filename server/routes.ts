@@ -68,7 +68,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+      console.log('GEMINI_API_KEY present:', !!GEMINI_API_KEY);
+      
       if (!GEMINI_API_KEY) {
+        console.error('GEMINI_API_KEY not found in environment variables');
         return res.status(500).json({ 
           message: 'AI service not configured. Please add GEMINI_API_KEY.' 
         });
