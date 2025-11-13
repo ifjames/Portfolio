@@ -73,7 +73,7 @@ export const projects: Project[] = [
     featured: true,
     category: "Web Development",
     privateAccess: true,
-    privateAccessMessage: "Capstone Project - UB School students only",
+    privateAccessMessage: "University of Batangas Students Only.",
   },
   {
     id: 5,
