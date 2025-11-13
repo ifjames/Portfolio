@@ -1,22 +1,7 @@
-import React, { useEffect, useRef, useCallback, useMemo } from 'react';
-import './profile-card.css';
-
-const DEFAULT_INNER_GRADIENT = 'linear-gradient(145deg,#60496e8c 0%,#71C4FF44 100%)';
-
-const ANIMATION_CONFIG = {
-  INITIAL_DURATION: 1200,
-  INITIAL_X_OFFSET: 70,
-  INITIAL_Y_OFFSET: 60,
-  DEVICE_BETA_OFFSET: 20,
-  ENTER_TRANSITION_MS: 180
-};
-
-const clamp = (v: number, min = 0, max = 100) => Math.min(Math.max(v, min), max);
-const round = (v: number, precision = 3) => parseFloat(v.toFixed(precision));
-const adjust = (v: number, fMin: number, fMax: number, tMin: number, tMax: number) => round(tMin + ((tMax - tMin) * (v - fMin)) / (fMax - fMin));
+import { useRef, useState, useEffect, MouseEvent, TouchEvent } from "react";
 
 interface ProfileCardProps {
-  avatarUrl?: string;
+  avatarUrl: string;
   iconUrl?: string;
   grainUrl?: string;
   innerGradient?: string;
@@ -37,358 +22,181 @@ interface ProfileCardProps {
   onContactClick?: () => void;
 }
 
-const ProfileCardComponent: React.FC<ProfileCardProps> = ({
-  avatarUrl = '',
-  iconUrl = '',
-  grainUrl = '',
-  innerGradient,
+export function ProfileCard({
+  avatarUrl,
+  iconUrl,
+  grainUrl,
+  innerGradient = "linear-gradient(135deg, rgba(125, 190, 255, 0.2) 0%, rgba(125, 190, 255, 0) 100%)",
   behindGlowEnabled = true,
-  behindGlowColor,
-  behindGlowSize,
-  className = '',
+  behindGlowColor = "rgba(125, 190, 255, 0.67)",
+  behindGlowSize = "50%",
+  className = "",
   enableTilt = true,
   enableMobileTilt = false,
   mobileTiltSensitivity = 5,
   miniAvatarUrl,
-  name = 'Javi A. Torres',
-  title = 'Software Engineer',
-  handle = 'javicodes',
-  status = 'Online',
-  contactText = 'Contact',
+  name = "Javi A. Torres",
+  title = "Software Engineer",
+  handle = "javicodes",
+  status = "Online",
+  contactText = "Contact",
   showUserInfo = true,
-  onContactClick
-}) => {
-  const wrapRef = useRef<HTMLDivElement>(null);
-  const shellRef = useRef<HTMLDivElement>(null);
-
-  const enterTimerRef = useRef<number | null>(null);
-  const leaveRafRef = useRef<number | null>(null);
-
-  const tiltEngine = useMemo(() => {
-    if (!enableTilt) return null;
-
-    let rafId: number | null = null;
-    let running = false;
-    let lastTs = 0;
-
-    let currentX = 0;
-    let currentY = 0;
-    let targetX = 0;
-    let targetY = 0;
-
-    const DEFAULT_TAU = 0.14;
-    const INITIAL_TAU = 0.6;
-    let initialUntil = 0;
-
-    const setVarsFromXY = (x: number, y: number) => {
-      const shell = shellRef.current;
-      const wrap = wrapRef.current;
-      if (!shell || !wrap) return;
-
-      const width = shell.clientWidth || 1;
-      const height = shell.clientHeight || 1;
-
-      const percentX = clamp((100 / width) * x);
-      const percentY = clamp((100 / height) * y);
-
-      const centerX = percentX - 50;
-      const centerY = percentY - 50;
-
-      const properties: Record<string, string> = {
-        '--pointer-x': `${percentX}%`,
-        '--pointer-y': `${percentY}%`,
-        '--background-x': `${adjust(percentX, 0, 100, 35, 65)}%`,
-        '--background-y': `${adjust(percentY, 0, 100, 35, 65)}%`,
-        '--pointer-from-center': `${clamp(Math.hypot(percentY - 50, percentX - 50) / 50, 0, 1)}`,
-        '--pointer-from-top': `${percentY / 100}`,
-        '--pointer-from-left': `${percentX / 100}`,
-        '--rotate-x': `${round(-(centerX / 5))}deg`,
-        '--rotate-y': `${round(centerY / 4)}deg`
-      };
-
-      for (const [k, v] of Object.entries(properties)) wrap.style.setProperty(k, v);
-    };
-
-    const step = (ts: number) => {
-      if (!running) return;
-      if (lastTs === 0) lastTs = ts;
-      const dt = (ts - lastTs) / 1000;
-      lastTs = ts;
-
-      const tau = ts < initialUntil ? INITIAL_TAU : DEFAULT_TAU;
-      const k = 1 - Math.exp(-dt / tau);
-
-      currentX += (targetX - currentX) * k;
-      currentY += (targetY - currentY) * k;
-
-      setVarsFromXY(currentX, currentY);
-
-      const stillFar = Math.abs(targetX - currentX) > 0.05 || Math.abs(targetY - currentY) > 0.05;
-
-      if (stillFar || document.hasFocus()) {
-        rafId = requestAnimationFrame(step);
-      } else {
-        running = false;
-        lastTs = 0;
-        if (rafId) {
-          cancelAnimationFrame(rafId);
-          rafId = null;
-        }
-      }
-    };
-
-    const start = () => {
-      if (running) return;
-      running = true;
-      lastTs = 0;
-      rafId = requestAnimationFrame(step);
-    };
-
-    return {
-      setImmediate(x: number, y: number) {
-        currentX = x;
-        currentY = y;
-        setVarsFromXY(currentX, currentY);
-      },
-      setTarget(x: number, y: number) {
-        targetX = x;
-        targetY = y;
-        start();
-      },
-      toCenter() {
-        const shell = shellRef.current;
-        if (!shell) return;
-        this.setTarget(shell.clientWidth / 2, shell.clientHeight / 2);
-      },
-      beginInitial(durationMs: number) {
-        initialUntil = performance.now() + durationMs;
-        start();
-      },
-      getCurrent() {
-        return { x: currentX, y: currentY, tx: targetX, ty: targetY };
-      },
-      cancel() {
-        if (rafId) cancelAnimationFrame(rafId);
-        rafId = null;
-        running = false;
-        lastTs = 0;
-      }
-    };
-  }, [enableTilt]);
-
-  const getOffsets = (evt: PointerEvent, el: HTMLElement) => {
-    const rect = el.getBoundingClientRect();
-    return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };
-  };
-
-  const handlePointerMove = useCallback(
-    (event: PointerEvent) => {
-      const shell = shellRef.current;
-      if (!shell || !tiltEngine) return;
-      const { x, y } = getOffsets(event, shell);
-      tiltEngine.setTarget(x, y);
-    },
-    [tiltEngine]
-  );
-
-  const handlePointerEnter = useCallback(
-    (event: PointerEvent) => {
-      const shell = shellRef.current;
-      if (!shell || !tiltEngine) return;
-
-      shell.classList.add('active');
-      shell.classList.add('entering');
-      if (enterTimerRef.current) window.clearTimeout(enterTimerRef.current);
-      enterTimerRef.current = window.setTimeout(() => {
-        shell.classList.remove('entering');
-      }, ANIMATION_CONFIG.ENTER_TRANSITION_MS);
-
-      const { x, y } = getOffsets(event, shell);
-      tiltEngine.setTarget(x, y);
-    },
-    [tiltEngine]
-  );
-
-  const handlePointerLeave = useCallback(() => {
-    const shell = shellRef.current;
-    if (!shell || !tiltEngine) return;
-
-    tiltEngine.toCenter();
-
-    const checkSettle = () => {
-      const { x, y, tx, ty } = tiltEngine.getCurrent();
-      const settled = Math.hypot(tx - x, ty - y) < 0.6;
-      if (settled) {
-        shell.classList.remove('active');
-        leaveRafRef.current = null;
-      } else {
-        leaveRafRef.current = requestAnimationFrame(checkSettle);
-      }
-    };
-    if (leaveRafRef.current) cancelAnimationFrame(leaveRafRef.current);
-    leaveRafRef.current = requestAnimationFrame(checkSettle);
-  }, [tiltEngine]);
-
-  const handleDeviceOrientation = useCallback(
-    (event: DeviceOrientationEvent) => {
-      const shell = shellRef.current;
-      if (!shell || !tiltEngine) return;
-
-      const { beta, gamma } = event;
-      if (beta == null || gamma == null) return;
-
-      const centerX = shell.clientWidth / 2;
-      const centerY = shell.clientHeight / 2;
-      const x = clamp(centerX + gamma * mobileTiltSensitivity, 0, shell.clientWidth);
-      const y = clamp(
-        centerY + (beta - ANIMATION_CONFIG.DEVICE_BETA_OFFSET) * mobileTiltSensitivity,
-        0,
-        shell.clientHeight
-      );
-
-      tiltEngine.setTarget(x, y);
-    },
-    [tiltEngine, mobileTiltSensitivity]
-  );
+  onContactClick,
+}: ProfileCardProps) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const glowRef = useRef<HTMLDivElement>(null);
+  const [rotateX, setRotateX] = useState(0);
+  const [rotateY, setRotateY] = useState(0);
+  const [glowX, setGlowX] = useState(50);
+  const [glowY, setGlowY] = useState(50);
 
   useEffect(() => {
-    if (!enableTilt || !tiltEngine) return;
+    if (!enableMobileTilt) return;
 
-    const shell = shellRef.current;
-    if (!shell) return;
-
-    const pointerMoveHandler = handlePointerMove as any;
-    const pointerEnterHandler = handlePointerEnter as any;
-    const pointerLeaveHandler = handlePointerLeave as any;
-    const deviceOrientationHandler = handleDeviceOrientation as any;
-
-    shell.addEventListener('pointerenter', pointerEnterHandler);
-    shell.addEventListener('pointermove', pointerMoveHandler);
-    shell.addEventListener('pointerleave', pointerLeaveHandler);
-
-    const handleClick = () => {
-      if (!enableMobileTilt || location.protocol !== 'https:') return;
-      const anyMotion = (window as any).DeviceMotionEvent;
-      if (anyMotion && typeof anyMotion.requestPermission === 'function') {
-        anyMotion
-          .requestPermission()
-          .then((state: string) => {
-            if (state === 'granted') {
-              window.addEventListener('deviceorientation', deviceOrientationHandler);
-            }
-          })
-          .catch(console.error);
-      } else {
-        window.addEventListener('deviceorientation', deviceOrientationHandler);
+    const handleOrientation = (event: DeviceOrientationEvent) => {
+      if (event.beta !== null && event.gamma !== null) {
+        const tiltX = Math.max(-20, Math.min(20, event.beta / mobileTiltSensitivity));
+        const tiltY = Math.max(-20, Math.min(20, event.gamma / mobileTiltSensitivity));
+        setRotateX(tiltX);
+        setRotateY(tiltY);
       }
     };
-    shell.addEventListener('click', handleClick);
 
-    const initialX = (shell.clientWidth || 0) - ANIMATION_CONFIG.INITIAL_X_OFFSET;
-    const initialY = ANIMATION_CONFIG.INITIAL_Y_OFFSET;
-    tiltEngine.setImmediate(initialX, initialY);
-    tiltEngine.toCenter();
-    tiltEngine.beginInitial(ANIMATION_CONFIG.INITIAL_DURATION);
+    window.addEventListener("deviceorientation", handleOrientation);
+    return () => window.removeEventListener("deviceorientation", handleOrientation);
+  }, [enableMobileTilt, mobileTiltSensitivity]);
 
-    return () => {
-      shell.removeEventListener('pointerenter', pointerEnterHandler);
-      shell.removeEventListener('pointermove', pointerMoveHandler);
-      shell.removeEventListener('pointerleave', pointerLeaveHandler);
-      shell.removeEventListener('click', handleClick);
-      window.removeEventListener('deviceorientation', deviceOrientationHandler);
-      if (enterTimerRef.current) window.clearTimeout(enterTimerRef.current);
-      if (leaveRafRef.current) cancelAnimationFrame(leaveRafRef.current);
-      tiltEngine.cancel();
-      shell.classList.remove('entering');
-    };
-  }, [
-    enableTilt,
-    enableMobileTilt,
-    tiltEngine,
-    handlePointerMove,
-    handlePointerEnter,
-    handlePointerLeave,
-    handleDeviceOrientation
-  ]);
+  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+    if (!enableTilt || !cardRef.current) return;
 
-  const cardStyle = useMemo(
-    () => ({
-      '--icon': iconUrl ? `url(${iconUrl})` : 'none',
-      '--grain': grainUrl ? `url(${grainUrl})` : 'none',
-      '--inner-gradient': innerGradient ?? DEFAULT_INNER_GRADIENT,
-      '--behind-glow-color': behindGlowColor ?? 'rgba(125, 190, 255, 0.67)',
-      '--behind-glow-size': behindGlowSize ?? '50%'
-    } as React.CSSProperties),
-    [iconUrl, grainUrl, innerGradient, behindGlowColor, behindGlowSize]
-  );
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
 
-  const handleContactClick = useCallback(() => {
-    onContactClick?.();
-  }, [onContactClick]);
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    const rotateXValue = ((y - centerY) / centerY) * -10;
+    const rotateYValue = ((x - centerX) / centerX) * 10;
+
+    setRotateX(rotateXValue);
+    setRotateY(rotateYValue);
+
+    const glowXValue = (x / rect.width) * 100;
+    const glowYValue = (y / rect.height) * 100;
+
+    setGlowX(glowXValue);
+    setGlowY(glowYValue);
+  };
+
+  const handleMouseLeave = () => {
+    if (!enableTilt) return;
+    setRotateX(0);
+    setRotateY(0);
+    setGlowX(50);
+    setGlowY(50);
+  };
 
   return (
-    <div ref={wrapRef} className={`pc-card-wrapper ${className}`.trim()} style={cardStyle}>
-      {behindGlowEnabled && <div className="pc-behind" />}
-      <div ref={shellRef} className="pc-card-shell">
-        <section className="pc-card">
-          <div className="pc-inside">
-            <div className="pc-shine" />
-            <div className="pc-glare" />
-            <div className="pc-content pc-avatar-content">
-              <img
-                className="avatar"
-                src={avatarUrl}
-                alt={`${name || 'User'} avatar`}
-                loading="lazy"
-                onError={(e) => {
-                  const t = e.target as HTMLImageElement;
-                  t.style.display = 'none';
-                }}
-              />
-              {showUserInfo && (
-                <div className="pc-user-info">
-                  <div className="pc-user-details">
-                    <div className="pc-mini-avatar">
-                      <img
-                        src={miniAvatarUrl || avatarUrl}
-                        alt={`${name || 'User'} mini avatar`}
-                        loading="lazy"
-                        onError={(e) => {
-                          const t = e.target as HTMLImageElement;
-                          t.style.opacity = '0.5';
-                          t.src = avatarUrl;
-                        }}
-                      />
-                    </div>
-                    <div className="pc-user-text">
-                      <div className="pc-handle">@{handle}</div>
-                      <div className="pc-status">{status}</div>
-                    </div>
-                  </div>
-                  <button
-                    className="pc-contact-btn"
-                    onClick={handleContactClick}
-                    style={{ pointerEvents: 'auto' }}
-                    type="button"
-                    aria-label={`Contact ${name || 'user'}`}
-                  >
-                    {contactText}
-                  </button>
-                </div>
-              )}
-            </div>
-            <div className="pc-content">
-              <div className="pc-details">
-                <h3>{name}</h3>
-                <p>{title}</p>
+    <div
+      className={`relative w-full max-w-sm mx-auto ${className}`}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
+      {behindGlowEnabled && (
+        <div
+          ref={glowRef}
+          className="absolute inset-0 rounded-3xl opacity-50 blur-3xl transition-all duration-300"
+          style={{
+            background: `radial-gradient(circle at ${glowX}% ${glowY}%, ${behindGlowColor} 0%, transparent ${behindGlowSize})`,
+          }}
+        />
+      )}
+
+      <div
+        ref={cardRef}
+        className="relative rounded-3xl overflow-hidden transition-transform duration-300 ease-out"
+        style={{
+          transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
+          transformStyle: "preserve-3d",
+        }}
+      >
+        <div className="relative aspect-[3/4] bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+          {iconUrl && (
+            <div
+              className="absolute inset-0 opacity-5"
+              style={{
+                backgroundImage: `url(${iconUrl})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+            />
+          )}
+
+          {grainUrl && (
+            <div
+              className="absolute inset-0 opacity-30 mix-blend-overlay"
+              style={{
+                backgroundImage: `url(${grainUrl})`,
+                backgroundSize: "cover",
+              }}
+            />
+          )}
+
+          <div
+            className="absolute inset-0"
+            style={{
+              background: innerGradient,
+            }}
+          />
+
+          <div className="relative h-full p-8 flex flex-col">
+            <div className="flex-1 flex items-center justify-center">
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/30 to-blue-600/30 rounded-full blur-2xl animate-pulse" />
+                <img
+                  src={avatarUrl}
+                  alt={name}
+                  className="relative w-48 h-48 rounded-full object-cover border-4 border-white/10 shadow-2xl"
+                />
               </div>
             </div>
+
+            {showUserInfo && (
+              <div className="bg-black/20 backdrop-blur-md rounded-2xl p-6 border border-white/10">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    {miniAvatarUrl && (
+                      <img
+                        src={miniAvatarUrl}
+                        alt={name}
+                        className="w-12 h-12 rounded-full border-2 border-white/20"
+                      />
+                    )}
+                    <div>
+                      <h3 className="text-white font-bold text-lg">{name}</h3>
+                      <p className="text-gray-400 text-sm">{title}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                    <span className="text-gray-400 text-xs">{status}</span>
+                  </div>
+                </div>
+
+                <p className="text-gray-400 text-sm mb-4">@{handle}</p>
+
+                <button
+                  onClick={onContactClick}
+                  className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95"
+                >
+                  {contactText}
+                </button>
+              </div>
+            )}
           </div>
-        </section>
+        </div>
       </div>
     </div>
   );
-};
-
-const ProfileCard = React.memo(ProfileCardComponent);
-export default ProfileCard;
+}

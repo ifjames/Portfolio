@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
-import ProfileCard from "@/components/profile-card";
+import { ProfileCard } from "@/components/profile-card";
 
 const skills = {
   frontend: ["React", "Vue.js", "Angular", "TypeScript", "JavaScript", "Tailwind CSS", "SASS"],
