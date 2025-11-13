@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
+import { ProfileCard } from "@/components/profile-card";
 
 const skills = {
   frontend: ["React", "Vue.js", "Angular", "TypeScript", "JavaScript", "Tailwind CSS", "SASS"],
@@ -71,10 +72,19 @@ export default function About() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="order-1 lg:order-2 lg:pl-12 mb-8 lg:mb-0"
           >
-            <img
-              src="https://i.ibb.co/Lzg00ZW3/454890869-1551467882442501-6964452098914490991-n.jpg&auto=format&fit=crop&w=600&h=600"
-              alt="James profile"
-              className="rounded-2xl shadow-2xl w-full max-w-sm sm:max-w-md mx-auto"
+            <ProfileCard
+              avatarUrl="https://i.ibb.co/Lzg00ZW3/454890869-1551467882442501-6964452098914490991-n.jpg"
+              name="James Matthew Castillo"
+              title="Full-Stack Developer"
+              handle="jamescastillo"
+              status="Available"
+              contactText="Get In Touch"
+              behindGlowEnabled={true}
+              behindGlowColor="rgba(59, 130, 246, 0.5)"
+              enableTilt={true}
+              enableMobileTilt={false}
+              showUserInfo={true}
+              onContactClick={() => window.location.href = '/contact'}
             />
           </motion.div>
         </div>
