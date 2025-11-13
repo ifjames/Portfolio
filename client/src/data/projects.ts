@@ -16,6 +16,9 @@ export interface Project {
   // Development/Status mode - replaces buttons with status badges
   developmentMode?: boolean;
   developmentMessage?: string;
+  // Private access - users can visit but not create accounts
+  privateAccess?: boolean;
+  privateAccessMessage?: string;
 }
 
 // Global setting to override all individual lock settings
@@ -69,6 +72,8 @@ export const projects: Project[] = [
     liveUrl: "https://ubianfoodhub.web.app/",
     featured: true,
     category: "Web Development",
+    privateAccess: true,
+    privateAccessMessage: "Capstone Project - UB School students only",
   },
   {
     id: 5,

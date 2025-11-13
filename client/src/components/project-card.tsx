@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { ExternalLink, Github, Lock } from "lucide-react";
+import { ExternalLink, Github, Lock, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
@@ -99,11 +99,25 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
       <div className="flip-card-inner relative w-full h-full">
         {/* Front */}
         <div className="flip-card-front absolute inset-0 bg-card dark:bg-card rounded-xl shadow-lg overflow-hidden border border-border">
-          <img
-            src={project.image}
-            alt={project.title}
-            className="w-full h-48 object-cover"
-          />
+          <div className="relative">
+            <img
+              src={project.image}
+              alt={project.title}
+              className="w-full h-48 object-cover"
+            />
+            {project.privateAccess && (
+              <div className="absolute top-2 right-2">
+                <Badge 
+                  variant="secondary" 
+                  className="bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-200 border border-amber-300 dark:border-amber-700 flex items-center gap-1"
+                  data-testid={`badge-private-access-${project.id}`}
+                >
+                  <ShieldAlert className="w-3 h-3" />
+                  Private Access
+                </Badge>
+              </div>
+            )}
+          </div>
           <div className="p-6">
             <h3 className="text-xl font-semibold mb-2 text-card-foreground">
               {project.title}
@@ -111,6 +125,12 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
             <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
               {project.description}
             </p>
+            {project.privateAccess && (
+              <p className="text-xs text-amber-700 dark:text-amber-400 mb-3 flex items-start gap-1">
+                <ShieldAlert className="w-3 h-3 mt-0.5 flex-shrink-0" />
+                <span>{project.privateAccessMessage || "Restricted access - account creation limited"}</span>
+              </p>
+            )}
             <div className="flex flex-wrap gap-2">
               {project.technologies?.map((tech) => {
                 const IconComponent = getTechIcon(tech);
@@ -128,7 +148,18 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
         {/* Back */}
         <div className="flip-card-back absolute inset-0 bg-gradient-to-br from-primary to-primary/80 rounded-xl shadow-lg p-6 flex flex-col justify-center items-center text-primary-foreground">
           <h3 className="text-xl font-bold mb-4">{project.title}</h3>
-          <p className="text-center mb-6">{project.description}</p>
+          <p className="text-center mb-4">{project.description}</p>
+          {project.privateAccess && (
+            <div className="mb-4">
+              <Badge 
+                variant="secondary" 
+                className="bg-amber-100 dark:bg-amber-900/80 text-amber-800 dark:text-amber-200 border border-amber-300 dark:border-amber-600 text-xs px-3 py-1"
+              >
+                <ShieldAlert className="w-3 h-3 mr-1" />
+                {project.privateAccessMessage || "Private Access Only"}
+              </Badge>
+            </div>
+          )}
           {/* Development Mode - Show status badge instead of buttons */}
           {isInDevelopmentMode ? (
             <motion.div
