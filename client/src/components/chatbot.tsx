@@ -26,6 +26,7 @@ export function Chatbot() {
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [lastMessageTime, setLastMessageTime] = useState<number>(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
@@ -117,6 +118,19 @@ export function Chatbot() {
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
+      // Rate limiting: 3 seconds between messages
+      const now = Date.now();
+      if (now - lastMessageTime < 3000) {
+        const errorMessage: Message = {
+          id: Date.now().toString(),
+          text: "Please wait a moment before sending another message.",
+          isBot: true,
+          timestamp: new Date(),
+        };
+        setMessages(prev => [...prev, errorMessage]);
+        return;
+      }
+      setLastMessageTime(now);
       sendMessage();
     }
   };
