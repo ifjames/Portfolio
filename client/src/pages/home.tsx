@@ -154,17 +154,43 @@ export default function Home() {
               </motion.div>
             </motion.div>
           </motion.div>
-
-          {/* Scroll indicator */}
-          <motion.div
-            className="absolute bottom-8 left-1/2 transform -translate-x-1/2 cursor-pointer"
-            animate={{ y: [0, -10, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            onClick={scrollToProjects}
-          >
-            <ChevronDown className="text-muted-foreground text-2xl hover:text-primary transition-colors" />
-          </motion.div>
         </div>
+
+        {/* Scroll indicator - positioned at bottom of section */}
+        <motion.div
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 cursor-pointer z-20"
+          initial={{ opacity: 0 }}
+          animate={{ 
+            opacity: 1,
+            y: [0, -10, 0] 
+          }}
+          transition={{ 
+            opacity: { delay: 1.2, duration: 0.5 },
+            y: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+          }}
+          onClick={scrollToProjects}
+          data-testid="button-scroll-to-projects"
+        >
+          <motion.div
+            className="flex flex-col items-center gap-2 px-4 py-2 rounded-full bg-background/50 backdrop-blur-sm border border-primary/20 hover:border-primary/40 transition-colors"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <span className="text-xs text-muted-foreground font-medium hidden sm:block">Scroll Down</span>
+            <motion.div
+              animate={{ 
+                y: [0, 4, 0],
+              }}
+              transition={{ 
+                duration: 1.5, 
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            >
+              <ChevronDown className="text-primary h-6 w-6" />
+            </motion.div>
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* Featured Projects Section */}

@@ -36,28 +36,147 @@ export function Mascot() {
         damping: 15
       }}
     >
-      {/* Speech Bubble */}
+      {/* Enhanced Speech Bubble */}
       <motion.div
-        className="relative bg-gradient-to-r from-cyan-500/10 to-blue-500/10 dark:from-cyan-400/20 dark:to-blue-400/20 backdrop-blur-sm rounded-2xl px-6 py-3 mb-4 shadow-2xl border border-cyan-400/30 dark:border-cyan-400/50"
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 1, duration: 0.5 }}
+        className="relative bg-gradient-to-r from-cyan-500/20 via-blue-500/20 to-purple-500/20 dark:from-cyan-400/30 dark:via-blue-400/30 dark:to-purple-400/30 backdrop-blur-md rounded-2xl px-6 py-4 mb-4 shadow-2xl border-2 border-cyan-400/40 dark:border-cyan-400/60 overflow-hidden"
+        initial={{ opacity: 0, scale: 0.8, y: -10 }}
+        animate={{ 
+          opacity: 1, 
+          scale: 1,
+          y: 0,
+          boxShadow: [
+            "0 10px 30px rgba(34, 211, 238, 0.2)",
+            "0 10px 40px rgba(34, 211, 238, 0.4)",
+            "0 10px 30px rgba(34, 211, 238, 0.2)"
+          ]
+        }}
+        transition={{ 
+          delay: 1, 
+          duration: 0.5,
+          boxShadow: {
+            duration: 3,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }
+        }}
       >
-        <motion.p 
-          className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-600 dark:from-cyan-400 dark:to-blue-400 whitespace-nowrap font-mono"
-          animate={{ 
-            opacity: [1, 0.7, 1],
+        {/* Animated background shimmer */}
+        <motion.div
+          className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent"
+          animate={{
+            x: ["-200%", "200%"],
           }}
-          transition={{ 
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+        />
+        
+        {/* Glowing particles inside bubble */}
+        {[...Array(3)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 bg-cyan-400 rounded-full blur-sm"
+            style={{
+              left: `${20 + i * 30}%`,
+              top: `${30 + i * 20}%`,
+            }}
+            animate={{
+              scale: [0, 1, 0],
+              opacity: [0, 1, 0],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              delay: i * 0.7,
+              ease: "easeInOut"
+            }}
+          />
+        ))}
+        
+        <motion.div className="relative flex items-center gap-2">
+          {/* Terminal prompt symbol */}
+          <motion.span
+            className="text-lg font-bold text-cyan-400 dark:text-cyan-300 font-mono"
+            animate={{
+              scale: [1, 1.2, 1],
+            }}
+            transition={{
+              duration: 1.5,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          >
+            {'>'}
+          </motion.span>
+          
+          {/* Main text with gradient */}
+          <motion.p 
+            className="text-base sm:text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 dark:from-cyan-300 dark:via-blue-400 dark:to-purple-400 whitespace-nowrap font-mono tracking-wider"
+            animate={{ 
+              backgroundPosition: ["0%", "100%", "0%"],
+            }}
+            transition={{ 
+              duration: 4,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+            style={{
+              backgroundSize: "200% 100%"
+            }}
+          >
+            System Ready
+          </motion.p>
+          
+          {/* Blinking cursor */}
+          <motion.span
+            className="text-base sm:text-lg font-bold text-cyan-400 dark:text-cyan-300 font-mono"
+            animate={{
+              opacity: [1, 0, 1],
+            }}
+            transition={{
+              duration: 0.8,
+              repeat: Infinity,
+              ease: "steps(2)"
+            }}
+          >
+            _
+          </motion.span>
+        </motion.div>
+        
+        {/* Binary code stream */}
+        <motion.div
+          className="absolute top-0 right-2 text-xs font-mono text-cyan-400/30 dark:text-cyan-300/30"
+          animate={{
+            opacity: [0.3, 0.6, 0.3],
+          }}
+          transition={{
             duration: 2,
             repeat: Infinity,
             ease: "easeInOut"
           }}
         >
-          {'>'} System Ready_
-        </motion.p>
+          01101110
+        </motion.div>
+        
+        {/* Triangle pointer */}
         <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full">
-          <div className="w-0 h-0 border-l-[6px] border-r-[6px] border-t-[6px] border-l-transparent border-r-transparent border-t-cyan-400/30 dark:border-t-cyan-400/50"></div>
+          <motion.div 
+            className="w-0 h-0 border-l-[8px] border-r-[8px] border-t-[8px] border-l-transparent border-r-transparent border-t-cyan-400/40 dark:border-t-cyan-400/60"
+            animate={{
+              borderTopColor: [
+                "rgba(34, 211, 238, 0.4)",
+                "rgba(34, 211, 238, 0.7)",
+                "rgba(34, 211, 238, 0.4)"
+              ]
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
         </div>
       </motion.div>
 
