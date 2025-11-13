@@ -28,8 +28,8 @@ export function Mascot() {
       className="relative flex flex-col items-center mb-8"
       initial={{ opacity: 0, scale: 0.5, y: -20 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
-      transition={{ 
-        duration: 0.8, 
+      transition={{
+        duration: 0.8,
         ease: "easeOut",
         type: "spring",
         stiffness: 200,
@@ -40,8 +40,8 @@ export function Mascot() {
       <motion.div
         className="relative bg-gradient-to-r from-cyan-500/20 via-blue-500/20 to-purple-500/20 dark:from-cyan-400/30 dark:via-blue-400/30 dark:to-purple-400/30 backdrop-blur-md rounded-2xl px-6 py-4 mb-4 shadow-2xl border-2 border-cyan-400/40 dark:border-cyan-400/60 overflow-hidden"
         initial={{ opacity: 0, scale: 0.8, y: -10 }}
-        animate={{ 
-          opacity: 1, 
+        animate={{
+          opacity: 1,
           scale: 1,
           y: [0, -8, 0],
           boxShadow: [
@@ -50,8 +50,8 @@ export function Mascot() {
             "0 10px 30px rgba(34, 211, 238, 0.2)"
           ]
         }}
-        transition={{ 
-          delay: 1, 
+        transition={{
+          delay: 1,
           duration: 0.5,
           y: {
             duration: 3,
@@ -77,7 +77,7 @@ export function Mascot() {
             ease: "linear"
           }}
         />
-        
+
         {/* Glowing particles inside bubble */}
         {[...Array(3)].map((_, i) => (
           <motion.div
@@ -99,7 +99,7 @@ export function Mascot() {
             }}
           />
         ))}
-        
+
         <motion.div className="relative flex items-center gap-2">
           {/* Terminal prompt symbol */}
           <motion.span
@@ -115,14 +115,14 @@ export function Mascot() {
           >
             {'>'}
           </motion.span>
-          
+
           {/* Main text with gradient */}
-          <motion.p 
+          <motion.p
             className="text-base sm:text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 dark:from-cyan-300 dark:via-blue-300 dark:to-purple-300 whitespace-nowrap font-mono tracking-wider"
-            animate={{ 
+            animate={{
               backgroundPosition: ["0%", "100%", "0%"],
             }}
-            transition={{ 
+            transition={{
               duration: 4,
               repeat: Infinity,
               ease: "linear"
@@ -133,7 +133,7 @@ export function Mascot() {
           >
             System Ready
           </motion.p>
-          
+
           {/* Blinking cursor */}
           <motion.span
             className="text-base sm:text-lg font-bold text-cyan-500 dark:text-cyan-300 font-mono"
@@ -143,13 +143,13 @@ export function Mascot() {
             transition={{
               duration: 0.8,
               repeat: Infinity,
-              ease: "steps(2)"
+              ease: "easeInOut"
             }}
           >
             _
           </motion.span>
         </motion.div>
-        
+
         {/* Binary code stream */}
         <motion.div
           className="absolute top-0 right-2 text-xs font-mono text-cyan-400/30 dark:text-cyan-300/30"
@@ -164,10 +164,10 @@ export function Mascot() {
         >
           01101110
         </motion.div>
-        
+
         {/* Triangle pointer */}
         <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full">
-          <motion.div 
+          <motion.div
             className="w-0 h-0 border-l-[8px] border-r-[8px] border-t-[8px] border-l-transparent border-r-transparent border-t-cyan-400/40 dark:border-t-cyan-400/60"
             animate={{
               borderTopColor: [
@@ -189,10 +189,10 @@ export function Mascot() {
       <motion.div
         className="relative w-32 h-32 sm:w-40 sm:h-40"
         style={{ perspective: "1000px" }}
-        animate={{ 
+        animate={{
           y: [0, -8, 0],
         }}
-        transition={{ 
+        transition={{
           duration: 3,
           repeat: Infinity,
           ease: "easeInOut"
@@ -200,7 +200,7 @@ export function Mascot() {
       >
         {/* Antenna */}
         <motion.div className="absolute left-1/2 -top-6 -translate-x-1/2 flex flex-col items-center z-20">
-          <motion.div 
+          <motion.div
             className="w-0.5 h-6 bg-gradient-to-b from-cyan-400 to-slate-600 dark:from-cyan-300 dark:to-slate-400"
             animate={{
               scaleY: [1, 1.1, 1],
@@ -211,11 +211,11 @@ export function Mascot() {
               ease: "easeInOut"
             }}
           />
-          <motion.div 
+          <motion.div
             className="w-2 h-2 rounded-full bg-cyan-400 dark:bg-cyan-300 shadow-lg shadow-cyan-500/50"
             animate={{
               scale: isProcessing ? [1, 1.5, 1] : 1,
-              boxShadow: isProcessing 
+              boxShadow: isProcessing
                 ? ["0 0 10px rgba(34, 211, 238, 0.5)", "0 0 20px rgba(34, 211, 238, 1)", "0 0 10px rgba(34, 211, 238, 0.5)"]
                 : "0 0 10px rgba(34, 211, 238, 0.5)",
             }}
@@ -264,7 +264,7 @@ export function Mascot() {
                 <motion.div
                   className="relative w-8 h-10 sm:w-10 sm:h-12 bg-black rounded-lg border border-cyan-500/50 overflow-hidden shadow-inner"
                   animate={{
-                    boxShadow: isProcessing 
+                    boxShadow: isProcessing
                       ? ["0 0 5px rgba(34, 211, 238, 0.3)", "0 0 15px rgba(34, 211, 238, 0.8)", "0 0 5px rgba(34, 211, 238, 0.3)"]
                       : "0 0 5px rgba(34, 211, 238, 0.3)",
                   }}
@@ -290,7 +290,7 @@ export function Mascot() {
                 <motion.div
                   className="relative w-8 h-10 sm:w-10 sm:h-12 bg-black rounded-lg border border-cyan-500/50 overflow-hidden shadow-inner"
                   animate={{
-                    boxShadow: isProcessing 
+                    boxShadow: isProcessing
                       ? ["0 0 5px rgba(34, 211, 238, 0.3)", "0 0 15px rgba(34, 211, 238, 0.8)", "0 0 5px rgba(34, 211, 238, 0.3)"]
                       : "0 0 5px rgba(34, 211, 238, 0.3)",
                   }}
@@ -337,7 +337,7 @@ export function Mascot() {
           {/* Top Face - creates 3D depth */}
           <motion.div
             className="absolute inset-0 bg-gradient-to-br from-slate-600 to-slate-700 dark:from-slate-500 dark:to-slate-600 rounded-2xl border-2 border-cyan-400/20"
-            style={{ 
+            style={{
               transform: "rotateX(90deg) translateZ(12px)",
               transformOrigin: "top"
             }}
@@ -346,7 +346,7 @@ export function Mascot() {
           {/* Right Face - creates 3D depth */}
           <motion.div
             className="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-900 dark:from-slate-700 dark:to-slate-800 rounded-2xl border-2 border-cyan-400/20"
-            style={{ 
+            style={{
               transform: "rotateY(90deg) translateZ(12px)",
               transformOrigin: "right"
             }}
