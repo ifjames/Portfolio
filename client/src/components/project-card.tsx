@@ -2,6 +2,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ExternalLink, Github, Lock, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { useState } from "react";
 import { 
   SiReact, 
@@ -69,6 +79,8 @@ const getTechIcon = (tech: string) => {
 export function ProjectCard({ project, index }: ProjectCardProps) {
   const [showCodeLocked, setShowCodeLocked] = useState(false);
   const [showLiveLocked, setShowLiveLocked] = useState(false);
+  const [showPrivateAccessDialog, setShowPrivateAccessDialog] = useState(false);
+  const [pendingUrl, setPendingUrl] = useState<string | null>(null);
 
   // Determine if project should be in locked/development mode
   const isEverythingLocked = EVERYTHING_LOCKED;
@@ -88,6 +100,20 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
       setShowLiveLocked(true);
       setTimeout(() => setShowLiveLocked(false), 2000); // Revert after 2 seconds
     }
+  };
+
+  const handlePrivateAccessClick = (e: React.MouseEvent, url: string) => {
+    e.preventDefault();
+    setPendingUrl(url);
+    setShowPrivateAccessDialog(true);
+  };
+
+  const confirmPrivateAccess = () => {
+    if (pendingUrl) {
+      window.open(pendingUrl, '_blank', 'noopener,noreferrer');
+    }
+    setShowPrivateAccessDialog(false);
+    setPendingUrl(null);
   };
   return (
     <motion.div
@@ -221,17 +247,32 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
                       </AnimatePresence>
                     </Button>
                   ) : (
-                    <Button
-                      asChild
-                      variant="secondary"
-                      size="sm"
-                      className="bg-background text-foreground hover:bg-accent hover:text-accent-foreground border-2 border-background"
-                    >
-                      <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
-                        <ExternalLink className="w-4 h-4 mr-2" />
-                        Live Demo
-                      </a>
-                    </Button>
+                    <>
+                      {project.privateAccess ? (
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          className="bg-background text-foreground hover:bg-accent hover:text-accent-foreground border-2 border-background"
+                          onClick={(e) => handlePrivateAccessClick(e, project.liveUrl!)}
+                          data-testid={`button-live-demo-${project.id}`}
+                        >
+                          <ExternalLink className="w-4 h-4 mr-2" />
+                          Live Demo
+                        </Button>
+                      ) : (
+                        <Button
+                          asChild
+                          variant="secondary"
+                          size="sm"
+                          className="bg-background text-foreground hover:bg-accent hover:text-accent-foreground border-2 border-background"
+                        >
+                          <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" data-testid={`button-live-demo-${project.id}`}>
+                            <ExternalLink className="w-4 h-4 mr-2" />
+                            Live Demo
+                          </a>
+                        </Button>
+                      )}
+                    </>
                   )}
                 </motion.div>
               )}
@@ -295,6 +336,40 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
           )}
         </div>
       </div>
+
+      {/* Private Access Dialog */}
+      <AlertDialog open={showPrivateAccessDialog} onOpenChange={setShowPrivateAccessDialog}>
+        <AlertDialogContent data-testid="dialog-private-access">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <ShieldAlert className="w-5 h-5 text-amber-600 dark:text-amber-500" />
+              Private Access Project
+            </AlertDialogTitle>
+            <AlertDialogDescription className="space-y-2">
+              <p>
+                This project has restricted access for account creation and certain features.
+              </p>
+              {project.privateAccessMessage && (
+                <p className="text-amber-700 dark:text-amber-400 font-medium">
+                  {project.privateAccessMessage}
+                </p>
+              )}
+              <p>
+                You can still view the project, but you may need to contact me for full access or account creation.
+              </p>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel data-testid="button-cancel-private-access">Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={confirmPrivateAccess}
+              data-testid="button-continue-private-access"
+            >
+              Continue to Project
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </motion.div>
   );
 }
