@@ -2,25 +2,23 @@ import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 
 export function Mascot() {
-  const [isWaving, setIsWaving] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [isBlinking, setIsBlinking] = useState(false);
 
-  // Random waving animation
   useEffect(() => {
-    const waveInterval = setInterval(() => {
-      setIsWaving(true);
-      setTimeout(() => setIsWaving(false), 1500);
-    }, 4000 + Math.random() * 3000); // Random interval between 4-7 seconds
+    const processInterval = setInterval(() => {
+      setIsProcessing(true);
+      setTimeout(() => setIsProcessing(false), 2000);
+    }, 5000 + Math.random() * 3000);
 
-    return () => clearInterval(waveInterval);
+    return () => clearInterval(processInterval);
   }, []);
 
-  // Random blinking animation
   useEffect(() => {
     const blinkInterval = setInterval(() => {
       setIsBlinking(true);
-      setTimeout(() => setIsBlinking(false), 150);
-    }, 2000 + Math.random() * 3000); // Random interval between 2-5 seconds
+      setTimeout(() => setIsBlinking(false), 200);
+    }, 3000 + Math.random() * 2000);
 
     return () => clearInterval(blinkInterval);
   }, []);
@@ -40,147 +38,258 @@ export function Mascot() {
     >
       {/* Speech Bubble */}
       <motion.div
-        className="relative bg-white dark:bg-gray-800 rounded-2xl px-4 py-2 mb-2 shadow-lg border border-gray-200 dark:border-gray-700"
+        className="relative bg-gradient-to-r from-cyan-500/10 to-blue-500/10 dark:from-cyan-400/20 dark:to-blue-400/20 backdrop-blur-sm rounded-2xl px-6 py-3 mb-4 shadow-2xl border border-cyan-400/30 dark:border-cyan-400/50"
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 1, duration: 0.5 }}
       >
         <motion.p 
-          className="text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap"
+          className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-600 dark:from-cyan-400 dark:to-blue-400 whitespace-nowrap font-mono"
           animate={{ 
-            color: ["#6B7280", "#3B82F6", "#6B7280"],
+            opacity: [1, 0.7, 1],
           }}
           transition={{ 
-            duration: 3,
+            duration: 2,
             repeat: Infinity,
             ease: "easeInOut"
           }}
         >
-          Welcome! 👋
+          {'>'} System Ready_
         </motion.p>
-        {/* Speech bubble tail */}
         <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full">
-          <div className="w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-white dark:border-t-gray-800"></div>
+          <div className="w-0 h-0 border-l-[6px] border-r-[6px] border-t-[6px] border-l-transparent border-r-transparent border-t-cyan-400/30 dark:border-t-cyan-400/50"></div>
         </div>
       </motion.div>
 
-      {/* Mascot Container */}
+      {/* Robot Container with 3D Perspective */}
       <motion.div
-        className="relative w-16 h-16 sm:w-20 sm:h-20"
+        className="relative w-32 h-32 sm:w-40 sm:h-40"
+        style={{ perspective: "1000px" }}
         animate={{ 
-          y: [0, -5, 0],
-          rotate: [0, 1, 0, -1, 0]
+          y: [0, -8, 0],
         }}
         transition={{ 
-          duration: 4,
+          duration: 3,
           repeat: Infinity,
           ease: "easeInOut"
         }}
       >
-        {/* Main Body */}
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full shadow-lg"
-          animate={{
-            scale: isWaving ? [1, 1.05, 1] : 1,
-          }}
-          transition={{ duration: 0.3 }}
-        />
-
-        {/* Face */}
-        <div className="absolute inset-2 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 rounded-full flex items-center justify-center">
-          {/* Eyes */}
-          <div className="flex space-x-2 mb-1">
-            <motion.div
-              className="w-2 h-2 bg-gray-800 dark:bg-white rounded-full"
-              animate={{
-                scaleY: isBlinking ? 0.1 : 1,
-              }}
-              transition={{ duration: 0.1 }}
-            />
-            <motion.div
-              className="w-2 h-2 bg-gray-800 dark:bg-white rounded-full"
-              animate={{
-                scaleY: isBlinking ? 0.1 : 1,
-              }}
-              transition={{ duration: 0.1 }}
-            />
-          </div>
-          
-          {/* Mouth */}
-          <motion.div
-            className="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-3 h-1.5 border-b-2 border-gray-800 dark:border-white rounded-b-full"
+        {/* Antenna */}
+        <motion.div className="absolute left-1/2 -top-6 -translate-x-1/2 flex flex-col items-center z-20">
+          <motion.div 
+            className="w-0.5 h-6 bg-gradient-to-b from-cyan-400 to-slate-600 dark:from-cyan-300 dark:to-slate-400"
             animate={{
-              scaleX: isWaving ? [1, 1.3, 1] : 1,
-            }}
-            transition={{ duration: 0.3 }}
-          />
-        </div>
-
-        {/* Left Arm (Waving) */}
-        <motion.div
-          className="absolute -left-2 top-4 w-3 h-6 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full origin-top"
-          animate={{
-            rotate: isWaving ? [0, -30, 30, -20, 20, 0] : 0,
-          }}
-          transition={{ 
-            duration: 1.5,
-            ease: "easeInOut"
-          }}
-        />
-
-        {/* Right Arm */}
-        <motion.div
-          className="absolute -right-2 top-4 w-3 h-6 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full origin-top"
-          animate={{
-            rotate: [0, 10, 0, -5, 0],
-          }}
-          transition={{ 
-            duration: 5,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-
-        {/* Sparkles around mascot */}
-        {[...Array(3)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 bg-yellow-400 rounded-full"
-            style={{
-              left: `${30 + i * 20}%`,
-              top: `${20 + i * 15}%`,
-            }}
-            animate={{
-              scale: [0, 1, 0],
-              opacity: [0, 1, 0],
-              rotate: [0, 180, 360],
+              scaleY: [1, 1.1, 1],
             }}
             transition={{
               duration: 2,
               repeat: Infinity,
-              delay: i * 0.7,
+              ease: "easeInOut"
+            }}
+          />
+          <motion.div 
+            className="w-2 h-2 rounded-full bg-cyan-400 dark:bg-cyan-300 shadow-lg shadow-cyan-500/50"
+            animate={{
+              scale: isProcessing ? [1, 1.5, 1] : 1,
+              boxShadow: isProcessing 
+                ? ["0 0 10px rgba(34, 211, 238, 0.5)", "0 0 20px rgba(34, 211, 238, 1)", "0 0 10px rgba(34, 211, 238, 0.5)"]
+                : "0 0 10px rgba(34, 211, 238, 0.5)",
+            }}
+            transition={{ duration: 0.5, repeat: isProcessing ? Infinity : 0 }}
+          />
+        </motion.div>
+
+        {/* Robot Head - 3D Cube */}
+        <motion.div
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-24 sm:w-28 sm:h-28"
+          style={{ transformStyle: "preserve-3d" }}
+          animate={{
+            rotateY: [0, 5, 0, -5, 0],
+            rotateX: [0, 2, 0, -2, 0],
+          }}
+          transition={{
+            duration: 6,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        >
+          {/* Front Face */}
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900 dark:from-slate-600 dark:via-slate-700 dark:to-slate-800 rounded-2xl border-2 border-cyan-400/40 shadow-2xl"
+            style={{ transform: "translateZ(12px)" }}
+          >
+            {/* Circuit pattern overlay */}
+            <div className="absolute inset-0 opacity-20">
+              <svg className="w-full h-full" viewBox="0 0 100 100">
+                <motion.path
+                  d="M10,10 L30,10 L30,30 M70,10 L90,10 L90,30 M10,70 L10,90 L30,90 M70,90 L90,90 L90,70"
+                  stroke="currentColor"
+                  strokeWidth="1"
+                  fill="none"
+                  className="text-cyan-400"
+                  animate={{ pathLength: [0.5, 1, 0.5] }}
+                  transition={{ duration: 4, repeat: Infinity }}
+                />
+              </svg>
+            </div>
+
+            {/* Digital Eyes Display */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="flex space-x-4 sm:space-x-5">
+                {/* Left Eye */}
+                <motion.div
+                  className="relative w-8 h-10 sm:w-10 sm:h-12 bg-black rounded-lg border border-cyan-500/50 overflow-hidden shadow-inner"
+                  animate={{
+                    boxShadow: isProcessing 
+                      ? ["0 0 5px rgba(34, 211, 238, 0.3)", "0 0 15px rgba(34, 211, 238, 0.8)", "0 0 5px rgba(34, 211, 238, 0.3)"]
+                      : "0 0 5px rgba(34, 211, 238, 0.3)",
+                  }}
+                  transition={{ duration: 1, repeat: isProcessing ? Infinity : 0 }}
+                >
+                  <motion.div
+                    className="absolute inset-1 bg-gradient-to-b from-cyan-400 to-cyan-600 rounded"
+                    animate={{
+                      scaleY: isBlinking ? 0.1 : 1,
+                      opacity: isBlinking ? 0.3 : 1,
+                    }}
+                    transition={{ duration: 0.1 }}
+                  />
+                  {/* Scan line effect */}
+                  <motion.div
+                    className="absolute inset-x-0 h-0.5 bg-cyan-300/50"
+                    animate={{ y: [0, 40, 0] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                  />
+                </motion.div>
+
+                {/* Right Eye */}
+                <motion.div
+                  className="relative w-8 h-10 sm:w-10 sm:h-12 bg-black rounded-lg border border-cyan-500/50 overflow-hidden shadow-inner"
+                  animate={{
+                    boxShadow: isProcessing 
+                      ? ["0 0 5px rgba(34, 211, 238, 0.3)", "0 0 15px rgba(34, 211, 238, 0.8)", "0 0 5px rgba(34, 211, 238, 0.3)"]
+                      : "0 0 5px rgba(34, 211, 238, 0.3)",
+                  }}
+                  transition={{ duration: 1, repeat: isProcessing ? Infinity : 0 }}
+                >
+                  <motion.div
+                    className="absolute inset-1 bg-gradient-to-b from-cyan-400 to-cyan-600 rounded"
+                    animate={{
+                      scaleY: isBlinking ? 0.1 : 1,
+                      opacity: isBlinking ? 0.3 : 1,
+                    }}
+                    transition={{ duration: 0.1 }}
+                  />
+                  {/* Scan line effect */}
+                  <motion.div
+                    className="absolute inset-x-0 h-0.5 bg-cyan-300/50"
+                    animate={{ y: [0, 40, 0] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "linear", delay: 0.1 }}
+                  />
+                </motion.div>
+              </div>
+            </div>
+
+            {/* Status LED strip */}
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex space-x-1">
+              {[0, 1, 2].map((i) => (
+                <motion.div
+                  key={i}
+                  className="w-1.5 h-1.5 rounded-full bg-cyan-400"
+                  animate={{
+                    opacity: isProcessing ? [0.3, 1, 0.3] : 0.3,
+                    scale: isProcessing ? [1, 1.2, 1] : 1,
+                  }}
+                  transition={{
+                    duration: 1,
+                    repeat: isProcessing ? Infinity : 0,
+                    delay: i * 0.2,
+                  }}
+                />
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Top Face - creates 3D depth */}
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-br from-slate-600 to-slate-700 dark:from-slate-500 dark:to-slate-600 rounded-2xl border-2 border-cyan-400/20"
+            style={{ 
+              transform: "rotateX(90deg) translateZ(12px)",
+              transformOrigin: "top"
+            }}
+          />
+
+          {/* Right Face - creates 3D depth */}
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-900 dark:from-slate-700 dark:to-slate-800 rounded-2xl border-2 border-cyan-400/20"
+            style={{ 
+              transform: "rotateY(90deg) translateZ(12px)",
+              transformOrigin: "right"
+            }}
+          />
+        </motion.div>
+
+        {/* Floating Binary Code */}
+        {['01', '10', '11', '00', '01'].map((binary, i) => (
+          <motion.div
+            key={i}
+            className="absolute text-xs font-mono font-bold text-cyan-500/60 dark:text-cyan-400/60"
+            style={{
+              left: `${15 + i * 18}%`,
+              top: `${30 + (i % 2) * 40}%`,
+            }}
+            animate={{
+              y: [0, -20, 0],
+              opacity: [0.2, 0.8, 0.2],
+              scale: [0.8, 1, 0.8],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              delay: i * 0.6,
+              ease: "easeInOut"
+            }}
+          >
+            {binary}
+          </motion.div>
+        ))}
+
+        {/* Particle Effects */}
+        {[...Array(4)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 bg-cyan-400 rounded-full"
+            style={{
+              left: `${25 + i * 18}%`,
+              top: `${50 + (i % 2) * 20}%`,
+            }}
+            animate={{
+              scale: [0, 1.5, 0],
+              opacity: [0, 1, 0],
+            }}
+            transition={{
+              duration: 2.5,
+              repeat: Infinity,
+              delay: i * 0.5,
               ease: "easeInOut"
             }}
           />
         ))}
-      </motion.div>
 
-      {/* Floating hearts */}
-      <motion.div
-        className="absolute -top-4 -right-4 text-red-500"
-        animate={{
-          y: [0, -10, 0],
-          opacity: [0, 1, 0],
-          scale: [0.8, 1.2, 0.8],
-        }}
-        transition={{
-          duration: 3,
-          repeat: Infinity,
-          delay: 2,
-          ease: "easeInOut"
-        }}
-      >
-        ❤️
+        {/* Holographic Ring */}
+        <motion.div
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-36 h-36 sm:w-44 sm:h-44 border-2 border-cyan-400/20 rounded-full"
+          animate={{
+            scale: [1, 1.1, 1],
+            opacity: [0.2, 0.4, 0.2],
+            rotate: [0, 360],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+        />
       </motion.div>
     </motion.div>
   );
