@@ -44,7 +44,7 @@ export function Chatbot() {
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       const target = event.target as Node;
-      
+
       // Don't close if clicking on the toggle button or inside the chat
       if (
         chatContainerRef.current && 
@@ -86,6 +86,13 @@ export function Chatbot() {
       const response = await apiRequest("POST", "/api/chat", { message: userInput });
       const data = await response.json();
 
+      if (!response.ok) {
+        if (response.status === 429) {
+          throw new Error('The AI is taking a break. Please try again in a few moments or use the contact form below to reach James directly.');
+        }
+        throw new Error(data.message || 'Failed to get response');
+      }
+
       const botResponse: Message = {
         id: (Date.now() + 1).toString(),
         text: data.message,
@@ -98,7 +105,7 @@ export function Chatbot() {
       console.error('Chat error:', err);
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: "Sorry, I'm having trouble connecting right now. Please try again or use the contact form to reach James directly.",
+        text: err.message || "Sorry, I'm having trouble connecting right now. Please try again or use the contact form to reach James directly.",
         isBot: true,
         timestamp: new Date(),
       };
@@ -165,7 +172,7 @@ export function Chatbot() {
                   James's Assistant
                 </CardTitle>
               </CardHeader>
-              
+
               <CardContent className="flex-1 p-0 flex flex-col min-h-0">
                 <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-4 space-y-4">
                   {messages.map((message) => (
@@ -201,7 +208,7 @@ export function Chatbot() {
                       </div>
                     </motion.div>
                   ))}
-                  
+
                   {isTyping && (
                     <motion.div
                       initial={{ opacity: 0, y: 10 }}
@@ -224,7 +231,7 @@ export function Chatbot() {
                   )}
                   <div ref={messagesEndRef} />
                 </div>
-                
+
                 <div className="p-4 border-t">
                   <div className="flex gap-2">
                     <Input

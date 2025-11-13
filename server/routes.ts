@@ -163,8 +163,16 @@ Instructions:
 
     } catch (error: any) {
       console.error('Chat error:', error);
+      
+      // Handle rate limit errors specifically
+      if (error.status === 429 || error.message?.includes('quota')) {
+        return res.status(429).json({ 
+          message: 'The AI service is temporarily unavailable due to rate limits. Please try again in a few moments or contact James directly.' 
+        });
+      }
+      
       res.status(500).json({ 
-        message: 'Sorry, I encountered an error. Please try again.' 
+        message: 'Sorry, I encountered an error. Please try again or use the contact form to reach James directly.' 
       });
     }
   });
